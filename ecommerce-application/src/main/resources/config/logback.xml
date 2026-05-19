@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="1 minutes">
+    <property name="APPLICATION_LEVEL" value="INFO"/>
+    <property name="ROOT_LEVEL" value="INFO"/>
+    <property name="STACK_TRACE_COUNT" value="15"/>
+    <property name="CLASS_NAME_LENGTH" value="40"/>
+
+    <property name="PATTERN" scope="context"
+              value="%date{yyyy-MM-dd'T'HH:mm:ss.SSS} [%level] requestId:[%mdc{requestId}] thread:[%thread] clientIP:[%mdc{clientIP}] %logger{${CLASS_NAME_LENGTH}}.%method@%line:%n    %message %rootException{${STACK_TRACE_COUNT}}%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/yekan.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/yekan-%d{yyyy-MM-dd_HH}.%i.log.zip</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="AsyncRolling" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ROLLING"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>logstash:4500</destination>
+        <addDefaultStatusListener>false</addDefaultStatusListener>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>{"app_name":"yekan", "app_version":"${APP_VERSION}", "raw_log": "${PATTERN}"}</pattern>
+                </pattern>
+                <mdc/>
+                <timestamp/>
+                <message/>
+                <threadName/>
+                <logLevel/>
+                <callerData/>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <maxDepthPerThrowable>${STACK_TRACE_COUNT}</maxDepthPerThrowable>
+                        <shortenedClassNameLength>${CLASS_NAME_LENGTH}</shortenedClassNameLength>
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <logger name="com.kishware" additivity="true" level="${APPLICATION_LEVEL}"/>
+    <logger name="com.tosan" additivity="true" level="${APPLICATION_LEVEL}"/>
+    <logger name="org.springframework.aop.framework.CglibAopProxy" level="ERROR"/>
+    <logger name="org.hibernate.cache" level="ERROR"/>
+    <logger name="org.hibernate.stat" level="${APPLICATION_LEVEL}"/>
+    <logger name="org.hibernate.type" level="INFO" additivity="true"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+    <logger name="org.hibernate.orm.jdbc.bind" level="INFO"/>
+
+    <root level="${ROOT_LEVEL}">
+        <appender-ref ref="CONSOLE"/>
+        <!--<appender-ref ref="ROLLING"/>-->
+        <!--<appender-ref ref="AsyncRolling"/>-->
+        <!--<appender-ref ref="LOGSTASH"/>-->
+    </root>
+</configuration>

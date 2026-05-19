@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "title": "ترب",
+  "description": "فروش کالا",
+  "isActive": false,
+  "ownerUserId": 2,
+  "storeUrl": null,
+  "botToken": null,
+  "base64EncodedLogo": null,
+  "createdAt": 1778432618013,
+  "updatedAt": 1778432804846
+}

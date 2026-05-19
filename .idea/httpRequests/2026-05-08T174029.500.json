@@ -1,0 +1,5 @@
+{
+  "errorCode": "EcommerceServiceException",
+  "message": "Send ticket time limit for this mobile number is not exceeded yet.",
+  "errorParams": null
+}

@@ -1,0 +1,5 @@
+{
+  "errorCode": "EcommerceServiceException",
+  "message": "Request is not permitted, because previous ticket is not expired yet.",
+  "errorParams": null
+}

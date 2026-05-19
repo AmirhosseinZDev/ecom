@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3cbe6a91-135b-4379-a092-711be1328f3f" name="Changes" comment=" feat: add README.md" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="com.intellij.jpb.JpaRepository" />
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Exception" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="merchant" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AmirhosseinZDev&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AmirhosseinZDev/ecommerce.git&quot;,
+    &quot;accountId&quot;: &quot;1ebf2c86-18e9-42c4-8465-2dd08d1c95fd&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="explicitlyEnabledProfiles" value="release" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="37LNvB1wt19cvMGJtvE71mI57Pw" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP Request.EcommerceApplication (1) | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #10.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #11.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #3.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #4.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #5.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #6.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #7.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.EcommerceApplication (1) | #8.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MerchantServiceUTest.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.ecommerce [clean,package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.ecommerce [clean].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.EcommerceApplication (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.EcommerceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/amirhossein/Desktop/Programming/projects/ecom/ecommerce/ecommerce/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vcs.patch.to.clipboard&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
+  }
+}</component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache" />
+      <recent name="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/properties" />
+      <recent name="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard" />
+      <recent name="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/security" />
+      <recent name="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ecommerce-application" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.telegram.ecommerce.persistence.cache.dto" />
+      <recent name="com.telegram.ecommerce.persistence.cache" />
+      <recent name="com.telegram.ecommerce.application.util" />
+      <recent name="com.telegram.ecommerce.application.service.ticket" />
+      <recent name="com.telegram.ecommerce.application.service.ticket.dto" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.EcommerceApplication (1)">
+    <configuration name="EcommerceApplication (1) | #10" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/EcommerceApplication (1).http" executionIdentifier="#10" index="10" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="EcommerceApplication (1) | #11" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/EcommerceApplication (1).http" executionIdentifier="#11" index="11" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="EcommerceApplication (1) | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/EcommerceApplication (1).http" executionIdentifier="#4" index="4" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="EcommerceApplication (1) | #8" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/EcommerceApplication (1).http" executionIdentifier="#8" index="8" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="MerchantServiceUTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ecommerce-application" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.telegram.ecommerce.application.service.merchant.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.telegram.ecommerce.application.service.merchant" />
+      <option name="MAIN_CLASS_NAME" value="com.telegram.ecommerce.application.service.merchant.MerchantServiceUTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EcommerceApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ecommerce-application" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.telegram.ecommerce.application.EcommerceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EcommerceApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ecommerce-application" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.telegram.ecommerce.application.EcommerceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EcommerceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ecommerce" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.telegram.ecommerce.EcommerceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.MerchantServiceUTest" />
+        <item itemvalue="HTTP Request.EcommerceApplication (1) | #11" />
+        <item itemvalue="HTTP Request.EcommerceApplication (1) | #10" />
+        <item itemvalue="HTTP Request.EcommerceApplication (1) | #8" />
+        <item itemvalue="HTTP Request.EcommerceApplication (1) | #4" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.29188.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.29188.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3cbe6a91-135b-4379-a092-711be1328f3f" name="Changes" comment="" />
+      <created>1766678622857</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1766678622857</updated>
+      <workItem from="1766678623852" duration="119000" />
+      <workItem from="1766678775448" duration="4310000" />
+      <workItem from="1766691462477" duration="5531000" />
+      <workItem from="1767383410939" duration="1736000" />
+      <workItem from="1767441053677" duration="1835000" />
+      <workItem from="1777037495827" duration="1336000" />
+      <workItem from="1777402943997" duration="7000" />
+      <workItem from="1777402968777" duration="2411000" />
+      <workItem from="1777654471775" duration="2268000" />
+      <workItem from="1777751022510" duration="14063000" />
+      <workItem from="1777966789355" duration="10397000" />
+      <workItem from="1778147270828" duration="9989000" />
+      <workItem from="1778280526118" duration="190000" />
+      <workItem from="1778333794232" duration="925000" />
+      <workItem from="1778419946405" duration="13008000" />
+      <workItem from="1778507192866" duration="4672000" />
+      <workItem from="1778781960100" duration="1206000" />
+      <workItem from="1778786969557" duration="513000" />
+      <workItem from="1778790252785" duration="98000" />
+    </task>
+    <task id="LOCAL-00001" summary="[feature] initial commit">
+      <option name="closed" value="true" />
+      <created>1766679365818</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1766679365818</updated>
+    </task>
+    <task id="LOCAL-00002" summary="[feature]implement login, sendTicket, signup services">
+      <option name="closed" value="true" />
+      <created>1777782699765</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1777782699765</updated>
+    </task>
+    <task id="LOCAL-00003" summary="[feature]implement login, sendTicket, signup services">
+      <option name="closed" value="true" />
+      <created>1777970758253</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1777970758253</updated>
+    </task>
+    <task id="LOCAL-00004" summary="[feature]implement login, sendTicket, signup services">
+      <option name="closed" value="true" />
+      <created>1777994857326</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1777994857326</updated>
+    </task>
+    <task id="LOCAL-00005" summary="first">
+      <option name="closed" value="true" />
+      <created>1777995373824</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1777995373824</updated>
+    </task>
+    <task id="LOCAL-00006" summary="some enhancement">
+      <option name="closed" value="true" />
+      <created>1777998978113</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1777998978113</updated>
+    </task>
+    <task id="LOCAL-00007" summary="some enhancement">
+      <option name="closed" value="true" />
+      <created>1777998982153</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1777998982153</updated>
+    </task>
+    <task id="LOCAL-00008" summary="unit tests">
+      <option name="closed" value="true" />
+      <created>1777999316578</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1777999316578</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix some problems">
+      <option name="closed" value="true" />
+      <created>1778238760106</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1778238760106</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix some problems">
+      <option name="closed" value="true" />
+      <created>1778249586538</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1778249586538</updated>
+    </task>
+    <task id="LOCAL-00011" summary=" feat: add reset credential flow&#10; &#10;  - add reset credential ticket request/response DTOs&#10;  - add reset credential request DTO and UserNotFoundException&#10;  - implement sendResetCredentialTicket service to send OTP by national code&#10;  - implement resetCredential service to update password using validated ticket token&#10;  - refactor ticket validation into validateCredentialTicket&#10;  - keep signup ticket validation endpoint delegating to credential ticket validation&#10;  - add credential ticket validation endpoint&#10;  - add isNewUser flag to ticket validation response&#10;  - stop running Shahkar match during ticket validation&#10;  - move Shahkar national code/mobile match into signup flow&#10;  - add reset credential endpoints to public security paths&#10;  - update signup and ticket validation unit tests for new behavior&#10;  - add unit tests for reset credential ticket and password reset flows">
+      <option name="closed" value="true" />
+      <created>1778422872825</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1778422872825</updated>
+    </task>
+    <task id="LOCAL-00012" summary=" feat: add reset credential flow&#10; &#10;  - add reset credential ticket request/response DTOs&#10;  - add reset credential request DTO and UserNotFoundException&#10;  - implement sendResetCredentialTicket service to send OTP by national code&#10;  - implement resetCredential service to update password using validated ticket token&#10;  - refactor ticket validation into validateCredentialTicket&#10;  - keep signup ticket validation endpoint delegating to credential ticket validation&#10;  - add credential ticket validation endpoint&#10;  - add isNewUser flag to ticket validation response&#10;  - stop running Shahkar match during ticket validation&#10;  - move Shahkar national code/mobile match into signup flow&#10;  - add reset credential endpoints to public security paths&#10;  - update signup and ticket validation unit tests for new behavior&#10;  - add unit tests for reset credential ticket and password reset flows">
+      <option name="closed" value="true" />
+      <created>1778423227459</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1778423227459</updated>
+    </task>
+    <task id="LOCAL-00013" summary=" feat: add reset credential flow&#10; &#10;  - add reset credential ticket request/response DTOs&#10;  - add reset credential request DTO and UserNotFoundException&#10;  - implement sendResetCredentialTicket service to send OTP by national code&#10;  - implement resetCredential service to update password using validated ticket token&#10;  - refactor ticket validation into validateCredentialTicket&#10;  - keep signup ticket validation endpoint delegating to credential ticket validation&#10;  - add credential ticket validation endpoint&#10;  - add isNewUser flag to ticket validation response&#10;  - stop running Shahkar match during ticket validation&#10;  - move Shahkar national code/mobile match into signup flow&#10;  - add reset credential endpoints to public security paths&#10;  - update signup and ticket validation unit tests for new behavior&#10;  - add unit tests for reset credential ticket and password reset flows">
+      <option name="closed" value="true" />
+      <created>1778423524549</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1778423524549</updated>
+    </task>
+    <task id="LOCAL-00014" summary=" feat: implement merchant domain&#10;  &#10;  -implement createMerchant for AppUser.&#10;  -implement updateOwnMerchant for AppUser.&#10;  -implement disableOwnMerchant for AppUser.&#10;  -implement getUserMerchants for AppUser.&#10;  -implement updateMerchant for Admin.&#10;  -implement deleteMerchant for Admin. &#10;  -implement getAllMerchants for Admin.">
+      <option name="closed" value="true" />
+      <created>1778433225985</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1778433225985</updated>
+    </task>
+    <task id="LOCAL-00015" summary=" feat: implement merchant domain&#10;  &#10;  -implement createMerchant for AppUser.&#10;  -implement updateOwnMerchant for AppUser.&#10;  -implement disableOwnMerchant for AppUser.&#10;  -implement getUserMerchants for AppUser.&#10;  -implement updateMerchant for Admin.&#10;  -implement deleteMerchant for Admin. &#10;  -implement getAllMerchants for Admin.">
+      <option name="closed" value="true" />
+      <created>1778433282859</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1778433282859</updated>
+    </task>
+    <task id="LOCAL-00016" summary=" feat: add README.md">
+      <option name="closed" value="true" />
+      <created>1778509463030</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1778509463030</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="[feature] initial commit" />
+    <MESSAGE value="[feature]implement login, sendTicket, signup services" />
+    <MESSAGE value="first" />
+    <MESSAGE value="some enhancement" />
+    <MESSAGE value="unit tests" />
+    <MESSAGE value="fix some problems" />
+    <MESSAGE value=" feat: add reset credential flow&#10; &#10;  - add reset credential ticket request/response DTOs&#10;  - add reset credential request DTO and UserNotFoundException&#10;  - implement sendResetCredentialTicket service to send OTP by national code&#10;  - implement resetCredential service to update password using validated ticket token&#10;  - refactor ticket validation into validateCredentialTicket&#10;  - keep signup ticket validation endpoint delegating to credential ticket validation&#10;  - add credential ticket validation endpoint&#10;  - add isNewUser flag to ticket validation response&#10;  - stop running Shahkar match during ticket validation&#10;  - move Shahkar national code/mobile match into signup flow&#10;  - add reset credential endpoints to public security paths&#10;  - update signup and ticket validation unit tests for new behavior&#10;  - add unit tests for reset credential ticket and password reset flows" />
+    <MESSAGE value=" feat: implement merchant domain&#10;  &#10;  -implement createMerchant for AppUser.&#10;  -implement updateOwnMerchant for AppUser.&#10;  -implement disableOwnMerchant for AppUser.&#10;  -implement getUserMerchants for AppUser.&#10;  -implement updateMerchant for Admin.&#10;  -implement deleteMerchant for Admin. &#10;  -implement getAllMerchants for Admin." />
+    <MESSAGE value=" feat: add README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value=" feat: add README.md" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
+    <option name="NON_MODAL_COMMIT_POSTPONE_SLOW_CHECKS" value="false" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

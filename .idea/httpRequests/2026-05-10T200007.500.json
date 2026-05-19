@@ -1,0 +1,5 @@
+{
+  "errorCode": "EcommerceServiceException",
+  "message": "HV000032: Unable to initialize com.tosan.validation.constraints.impl.Base64Validator.",
+  "errorParams": null
+}
