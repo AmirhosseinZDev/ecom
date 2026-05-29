@@ -1,0 +1,82 @@
+package com.telegram.ecommerce.application.controller.user;
+
+import com.telegram.ecommerce.application.api.dto.user.*;
+import com.telegram.ecommerce.application.api.exception.*;
+import com.telegram.ecommerce.application.config.security.UserDetailsDto;
+import com.telegram.ecommerce.application.service.user.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author AmirHossein ZamanZade
+ * @since 12/26/25
+ */
+@RestController
+@RequestMapping("/user")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping(value = "/signup-ticket", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public SendSignupTicketResponseDto sendSignupTicket(@RequestBody SendSignupTicketRequestDto requestDto)
+            throws TicketValidationBlockException {
+        return userService.sendSignupTicket(requestDto);
+    }
+
+    @PostMapping(value = "/signup-ticket/validation", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public SignupTicketValidationResponseDto validateSignupTicket(
+            @RequestBody SignupTicketValidationRequestDto requestDto)
+            throws TicketValidationBlockException, InvalidTicketException {
+        return userService.validateSignupTicket(requestDto);
+    }
+
+    @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void signup(@RequestBody SignupRequestDto requestDto)
+            throws UserHasAlreadyExistException, InvalidSignupTokenException {
+        userService.signup(requestDto);
+    }
+
+    @PostMapping(value = "/check-registration", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public CheckUserRegistrationResponseDto checkUserRegistration(
+            @RequestBody CheckUserRegistrationRequestDto requestDto) {
+        return userService.checkUserRegistration(requestDto);
+    }
+
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public LoginResponseDto login(@RequestBody LoginRequestDto requestDto) {
+        return userService.login(requestDto);
+    }
+
+    @PostMapping(value = "/login-ticket", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public SendSignupTicketResponseDto sendLoginTicket(@RequestBody SendLoginTicketRequestDto requestDto)
+            throws TicketValidationBlockException, UserNotFoundException {
+        return userService.sendLoginTicket(requestDto);
+    }
+
+    @PostMapping(value = "/login-ticket/validation", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public LoginResponseDto validateLoginTicket(@RequestBody ValidateLoginTicketRequestDto requestDto)
+            throws TicketValidationBlockException, InvalidTicketException, UserNotFoundException {
+        return userService.validateLoginTicket(requestDto);
+    }
+
+    @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void changePassword(@RequestBody ChangePasswordRequestDto requestDto, Authentication authentication)
+            throws UserNotFoundException, InvalidPasswordException {
+        UserDetailsDto userDetails = (UserDetailsDto) authentication.getPrincipal();
+        userService.changePassword(requestDto, userDetails.getId());
+    }
+}

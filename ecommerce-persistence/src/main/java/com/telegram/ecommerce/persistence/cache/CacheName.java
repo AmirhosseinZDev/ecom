@@ -7,7 +7,9 @@ package com.telegram.ecommerce.persistence.cache;
 public enum CacheName {
 
     SIGNUP_TICKET,
-    USER_LAST_TICKET,
+    SIGNUP_LAST_TICKET,
+    LOGIN_TICKET,
+    LOGIN_LAST_TICKET,
     BLOCKED_MOBILE_NUMBER,
     SIGNUP_TOKEN
 }

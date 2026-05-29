@@ -21,7 +21,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var optionalUser = appUserRepository.findByUsername(username);
-        if (optionalUser.isPresent() && optionalUser.get().getIsEnabled()) {
+        if (optionalUser.isPresent() && Boolean.TRUE.equals(optionalUser.get().getIsEnabled())
+                && Boolean.TRUE.equals(optionalUser.get().getIsRegistered())) {
             return new UserDetailsDto(optionalUser.get());
         }
         throw new BadCredentialsException("Invalid user with username: " + username);

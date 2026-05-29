@@ -103,6 +103,6 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
     }
 
     private List<String> getSemiIgnoredParameters() {
-        return List.of("nationalCode");
+        return List.of();
     }
 }

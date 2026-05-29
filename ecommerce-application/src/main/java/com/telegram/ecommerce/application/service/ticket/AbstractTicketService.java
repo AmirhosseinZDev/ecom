@@ -7,8 +7,8 @@ import com.telegram.ecommerce.application.api.exception.TicketValidationBlockExc
 import com.telegram.ecommerce.application.invoker.sms.SmsService;
 import com.telegram.ecommerce.application.service.ticket.dto.TicketGenerateRequestDto;
 import com.telegram.ecommerce.application.util.DateUtil;
+import com.telegram.ecommerce.persistence.cache.AbstractTicketCacheService;
 import com.telegram.ecommerce.persistence.cache.BlockedMobileNumbersCacheService;
-import com.telegram.ecommerce.persistence.cache.TicketCacheService;
 import com.telegram.ecommerce.persistence.cache.dto.TicketInfoCacheDto;
 import com.telegram.ecommerce.persistence.entity.AppUser;
 import com.telegram.ecommerce.persistence.repository.AppUserRepository;
@@ -29,7 +29,7 @@ public abstract class AbstractTicketService {
 
     private final DateUtil dateUtil;
     private final SmsService smsService;
-    private final TicketCacheService ticketCacheService;
+    private final AbstractTicketCacheService ticketCacheService;
     private final BlockedMobileNumbersCacheService blockedMobileNumbersCacheService;
     private final AppUserRepository appUserRepository;
 
@@ -77,8 +77,9 @@ public abstract class AbstractTicketService {
         }
         Date expireDate = new Date(currentDate.getTime() + ticketTimeToLiveInMillis);
         String ticket = generateTicket(getTicketLength(ticketGenerateRequestDto));
-        AppUser appUser = appUserRepository.findByMobile(ticketGenerateRequestDto.getMobileNumber());
-        ticketCacheService.addTicket(ticketGenerateRequestDto.getCacheKey(), appUser != null ? appUser.getId() : null,
+        Long userId = appUserRepository.findByMobile(ticketGenerateRequestDto.getMobileNumber())
+                .map(AppUser::getId).orElse(null);
+        ticketCacheService.addTicket(ticketGenerateRequestDto.getCacheKey(), userId,
                 new TicketInfoCacheDto(ticket), expireDate);
         ticketCacheService.setLastSentTicketDate(ticketGenerateRequestDto.getLastSentCacheKey(), currentDate,
                 expireDate);

@@ -4,7 +4,95 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cbe6a91-135b-4379-a092-711be1328f3f" name="Changes" comment=" feat: add README.md" />
+    <list default="true" id="3cbe6a91-135b-4379-a092-711be1328f3f" name="Changes" comment=" feat: add the structure of project">
+      <change afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/ChangePasswordRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/CheckUserRegistrationRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/CheckUserRegistrationResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/LoginRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/LoginResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/SendLoginTicketRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/SendSignupTicketRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/SendSignupTicketResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/SignupRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/SignupTicketValidationRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/SignupTicketValidationResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/ValidateLoginTicketRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/user/enumeration/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/exception/InvalidPasswordException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/properties/dto/LoginProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/controller/user/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/ticket/LoginTicketService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/user/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/main/resources/db/migration/V1__initial_schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/ticket/LoginTicketService_sendTicketUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/ticket/LoginTicketService_validateTicketUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_changePasswordUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_checkUserRegistrationUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_loginUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_sendLoginTicketUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_sendSignupTicketUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_signupUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_validateLoginTicketUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/user/UserService_validateSignupTicketUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/AbstractTicketCacheService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/LoginTicketCacheService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/SignupTicketCacheService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/test/java/com/telegram/ecommerce/persistence/cache/LoginTicketCacheService_getLastSentTicketDateUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/test/java/com/telegram/ecommerce/persistence/cache/LoginTicketCacheService_setLastSentTicketDateUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/test/java/com/telegram/ecommerce/persistence/cache/SignupTicketCacheService_getLastSentTicketDateUTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-persistence/src/test/java/com/telegram/ecommerce/persistence/cache/SignupTicketCacheService_setLastSentTicketDateUTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2f98b191-abc6-4738-b31d-724f7ace5343.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2f98b191-abc6-4738-b31d-724f7ace5343.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/LoginRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/LoginResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/ResetCredentialRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SendResetCredentialTicketRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SendResetCredentialTicketResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SendSignupTicketRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SendSignupTicketResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SignupRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SignupTicketValidationRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/SignupTicketValidationResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/dto/dashboard/enumeration/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/exception/InvalidNationalCodeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/api/exception/MismatchNationalCodeWithMobileNumberException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/EcommerceConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/EcommerceConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/properties/EcommercePropertiesConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/properties/EcommercePropertiesConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/security/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/security/SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/security/UserDetailServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/config/security/UserDetailServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/controller/dashboard/DashboardController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/controller/dashboard/user/DashboardUserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/invoker/shahkar/ShahkarService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/invoker/shahkar/client/ShahkarClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/invoker/shahkar/config/ShahkarClientConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/invoker/shahkar/config/properties/ShahkarProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/invoker/shahkar/dto/ShahkarRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/invoker/shahkar/dto/ShahkarResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/dashboard/DashboardUserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/ticket/AbstractTicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/ticket/AbstractTicketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/ticket/SignupTicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/java/com/telegram/ecommerce/application/service/ticket/SignupTicketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/main/resources/config/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/main/resources/config/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/invoker/shahkar/ShahkarService_matchUTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/dashboard/DashboardAppUserService_resetCredentialUTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/dashboard/DashboardAppUserService_sendResetCredentialTicketUTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/dashboard/DashboardAppUserService_signupUTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/dashboard/DashboardAppUserService_validateCredentialTicketUTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/ticket/SignupTicketService_sendTicketUTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/ticket/SignupTicketService_sendTicketUTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/ticket/SignupTicketService_validateTicketUTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-application/src/test/java/com/telegram/ecommerce/application/service/ticket/SignupTicketService_validateTicketUTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/CacheName.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/CacheName.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/TicketCacheService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/dto/SignupData.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache/dto/SignupData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/entity/AppUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/entity/AppUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/repository/AppUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/repository/AppUserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/test/java/com/telegram/ecommerce/persistence/cache/TicketCacheService_getLastSentTicketDateUTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce-persistence/src/test/java/com/telegram/ecommerce/persistence/cache/TicketCacheService_setLastSentTicketDateUTest.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,7 +112,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="merchant" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -36,12 +124,12 @@
     &quot;assignee&quot;: &quot;AmirhosseinZDev&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/AmirhosseinZDev/ecommerce.git&quot;,
-    &quot;accountId&quot;: &quot;1ebf2c86-18e9-42c4-8465-2dd08d1c95fd&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AmirhosseinZDev/ecom.git",
+    "accountId": "d88440ea-e5d6-4914-a963-c62387178027"
   }
-}</component>
+}]]></component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -61,50 +149,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.EcommerceApplication (1) | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #10.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #11.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #2.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #3.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #4.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #5.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #6.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #7.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.EcommerceApplication (1) | #8.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.MerchantServiceUTest.executor&quot;: &quot;Debug&quot;,
-    &quot;Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.ecommerce [clean,package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.ecommerce [clean].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.EcommerceApplication (1).executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.EcommerceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/amirhossein/Desktop/Programming/projects/ecom/ecommerce/ecommerce/ecommerce-persistence/src/main/java/com/telegram/ecommerce/persistence/cache&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vcs.patch.to.clipboard&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.EcommerceApplication (1) | #1.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #10.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #11.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #2.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #3.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #4.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #5.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #6.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #7.executor": "Run",
+    "HTTP Request.EcommerceApplication (1) | #8.executor": "Run",
+    "JUnit.MerchantServiceUTest.executor": "Debug",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "Maven.ecommerce [clean,package].executor": "Run",
+    "Maven.ecommerce [clean].executor": "Run",
+    "Maven.ecommerce [package].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.EcommerceApplication (1).executor": "Run",
+    "Spring Boot.EcommerceApplication.executor": "Debug",
+    "git-widget-placeholder": "refactor",
+    "last_opened_file_path": "/Users/amirhossein/Desktop/Programming/projects/our-pro/ecom",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vcs.patch.to.clipboard": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -220,6 +309,8 @@
       <workItem from="1778781960100" duration="1206000" />
       <workItem from="1778786969557" duration="513000" />
       <workItem from="1778790252785" duration="98000" />
+      <workItem from="1779193256009" duration="988000" />
+      <workItem from="1780079218042" duration="6660000" />
     </task>
     <task id="LOCAL-00001" summary="[feature] initial commit">
       <option name="closed" value="true" />
@@ -349,7 +440,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778509463030</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary=" feat: add the structure of project">
+      <option name="closed" value="true" />
+      <created>1779193676476</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1779193676476</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -390,7 +489,8 @@
     <MESSAGE value=" feat: add reset credential flow&#10; &#10;  - add reset credential ticket request/response DTOs&#10;  - add reset credential request DTO and UserNotFoundException&#10;  - implement sendResetCredentialTicket service to send OTP by national code&#10;  - implement resetCredential service to update password using validated ticket token&#10;  - refactor ticket validation into validateCredentialTicket&#10;  - keep signup ticket validation endpoint delegating to credential ticket validation&#10;  - add credential ticket validation endpoint&#10;  - add isNewUser flag to ticket validation response&#10;  - stop running Shahkar match during ticket validation&#10;  - move Shahkar national code/mobile match into signup flow&#10;  - add reset credential endpoints to public security paths&#10;  - update signup and ticket validation unit tests for new behavior&#10;  - add unit tests for reset credential ticket and password reset flows" />
     <MESSAGE value=" feat: implement merchant domain&#10;  &#10;  -implement createMerchant for AppUser.&#10;  -implement updateOwnMerchant for AppUser.&#10;  -implement disableOwnMerchant for AppUser.&#10;  -implement getUserMerchants for AppUser.&#10;  -implement updateMerchant for Admin.&#10;  -implement deleteMerchant for Admin. &#10;  -implement getAllMerchants for Admin." />
     <MESSAGE value=" feat: add README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value=" feat: add README.md" />
+    <MESSAGE value=" feat: add the structure of project" />
+    <option name="LAST_COMMIT_MESSAGE" value=" feat: add the structure of project" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="NON_MODAL_COMMIT_POSTPONE_SLOW_CHECKS" value="false" />
   </component>

@@ -33,13 +33,13 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfiguration {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/dashboard/user/signup-ticket",
-            "/dashboard/user/signup-ticket/validation",
-            "/dashboard/user/credential-ticket/validation",
-            "/dashboard/user/signup",
-            "/dashboard/user/reset-credential-ticket",
-            "/dashboard/user/reset-credential",
-            "/dashboard/user/login",
+            "/user/signup-ticket",
+            "/user/signup-ticket/validation",
+            "/user/signup",
+            "/user/check-registration",
+            "/user/login",
+            "/user/login-ticket",
+            "/user/login-ticket/validation",
             "/v3/**",
             "/swagger-ui.html",
             "/swagger-ui/**"

@@ -7,8 +7,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author Hadi Zahedian
- * @since 7/22/2023
+ * @author AmirHossein ZamanZade
+ * @since 12/26/25
  */
 @Getter
 @AllArgsConstructor
@@ -16,8 +16,6 @@ public class SignupData implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8268149114780824900L;
-
-    private String nationalCode;
 
     private String mobile;
 }

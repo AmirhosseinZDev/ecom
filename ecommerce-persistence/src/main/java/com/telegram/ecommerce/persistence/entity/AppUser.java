@@ -13,10 +13,12 @@ import java.util.Date;
  * @since 12/25/25
  */
 @Entity
-@Table(name = "app_user", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_app_user_username", columnNames = "username"),
-        @UniqueConstraint(name = "uk_app_user_mobile", columnNames = "mobile")
-})
+@Table(
+        name = "app_user",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_app_user_username", columnNames = "username")
+        }
+)
 @Getter
 @Setter
 public class AppUser {
@@ -27,8 +29,11 @@ public class AppUser {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 512)
-    private String name;
+    @Column(name = "first_name", nullable = false, length = 255)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 255)
+    private String lastName;
 
     @Column(name = "username", nullable = false, length = 255)
     private String username;
@@ -36,8 +41,17 @@ public class AppUser {
     @Column(name = "password", nullable = false, length = 512)
     private String password;
 
-    @Column(name = "mobile", nullable = false, length = 20)
-    private String mobile;
+    @Column(name = "is_registered", nullable = false)
+    private Boolean isRegistered;
+
+    @Column(name = "national_id", length = 20)
+    private String nationalId;
+
+    @Column(name = "email", length = 255)
+    private String email;
+
+    @Column(name = "birth_date")
+    private Date birthDate;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

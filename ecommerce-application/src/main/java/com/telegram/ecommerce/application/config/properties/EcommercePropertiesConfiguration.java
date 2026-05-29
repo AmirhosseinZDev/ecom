@@ -1,7 +1,7 @@
 package com.telegram.ecommerce.application.config.properties;
 
+import com.telegram.ecommerce.application.config.properties.dto.LoginProperties;
 import com.telegram.ecommerce.application.config.properties.dto.SignupProperties;
-import com.telegram.ecommerce.application.invoker.shahkar.config.properties.ShahkarProperties;
 import com.telegram.ecommerce.application.invoker.sms.config.properties.SmsProperties;
 import jakarta.validation.Valid;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,15 +24,15 @@ public class EcommercePropertiesConfiguration {
 
     @Bean
     @Valid
-    @ConfigurationProperties(prefix = "sms")
-    public SmsProperties smsProperties() {
-        return new SmsProperties();
+    @ConfigurationProperties(prefix = "login")
+    public LoginProperties loginProperties() {
+        return new LoginProperties();
     }
 
     @Bean
     @Valid
-    @ConfigurationProperties(prefix = "shahkar")
-    public ShahkarProperties shahkarProperties() {
-        return new ShahkarProperties();
+    @ConfigurationProperties(prefix = "sms")
+    public SmsProperties smsProperties() {
+        return new SmsProperties();
     }
 }
