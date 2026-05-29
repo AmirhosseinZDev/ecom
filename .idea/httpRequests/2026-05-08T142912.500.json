@@ -1,5 +1,0 @@
-{
-  "errorCode": "EcommerceServiceException",
-  "message": "Could not resolve parameter [0] in public abstract com.telegram.ecommerce.application.invoker.sms.dto.SmsResponseDto com.telegram.ecommerce.application.invoker.sms.client.SmsClient.sendMessage(com.telegram.ecommerce.application.invoker.sms.dto.SmsRequestDto): No suitable resolver",
-  "errorParams": null
-}
