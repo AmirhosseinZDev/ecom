@@ -7,13 +7,18 @@ is opt-in at checkout. Authentication is OTP-based (SMS ticket system) plus pass
 
 ## Module Structure
 
+Single Maven module (`com.ecommerce:ecommerce`), packaged as the runnable Spring Boot jar.
+All code lives under the `com.ecommerce` base package:
+
 ```
-ecommerce/
-├── ecommerce-application/   # Spring Boot entry point, REST controllers, services, security
-└── ecommerce-persistence/   # JPA entities, Spring Data repositories, cache services
+src/main/java/com/ecommerce/
+├── application/   # Spring Boot entry point, REST controllers, services, security, SMS client
+└── persistence/   # JPA entities, Spring Data repositories, cache services
 ```
 
-`ecommerce-persistence` is a plain library; `ecommerce-application` is the runnable jar.
+> The project used to be a two-module Maven build (`ecommerce-application` + `ecommerce-persistence`)
+> under the `com.telegram.ecommerce` package. It was flattened into one module and renamed to
+> `com.ecommerce`; the `application` / `persistence` split now survives only as package boundaries.
 
 ## Tech Stack
 
@@ -26,11 +31,12 @@ ecommerce/
 | Migrations  | Flyway (schema owned by Flyway; `ddl-auto=validate`)         |
 | Cache       | Redis via Tedisson (`tedisson-spring-boot-starter`)          |
 | Validation  | tosan-validation (`@MobileNumber`, `@NationalCode`, `@UUID`) |
-| Build       | Maven multi-module                                           |
+| Build       | Maven (single module)                                        |
+| ITest infra | Testcontainers (PostgreSQL) + WireMock (SMS), JUnit 5        |
 
 ## Database
 
-- Flyway migrations live in `ecommerce-application/src/main/resources/db/migration/`.
+- Flyway migrations live in `src/main/resources/db/migration/`.
 - `spring.jpa.hibernate.ddl-auto=validate` — Hibernate validates entity↔column alignment but
   never creates or alters tables; all DDL is owned by Flyway.
 - `spring.flyway.baseline-on-migrate=false` — assumes a fresh database. To apply Flyway on a DB
@@ -122,6 +128,10 @@ JWT secret: `security.jwt.secret-key` (Base64-encoded HMAC-SHA256 key ≥ 256 bi
 
 ## Testing Conventions
 
+Two independent test tiers live side by side under `src/test/java`:
+
+### Unit tests (`*UTest`) — surefire
+
 | Convention           | Rule                                                                             |
 |----------------------|----------------------------------------------------------------------------------|
 | Test class name      | `<Subject>_<methodUnderTest>UTest.java`                                          |
@@ -131,10 +141,33 @@ JWT secret: `security.jwt.secret-key` (Base64-encoded HMAC-SHA256 key ≥ 256 bi
 | Cache service tests  | Use `@InjectMocks` on concrete cache classes (constructor injection via Mockito) |
 | Scope                | Unit tests only; no Spring context is loaded                                     |
 
-Run only unit tests (skipped by default, enabled in `release` Maven profile):
+Unit tests are **skipped by default** and enabled by the `release` profile:
 
 ```
-mvn test -P release -pl ecommerce-application,ecommerce-persistence
+mvn test -P release
+```
+
+### Integration tests (`*ITest`) — failsafe
+
+Live in `com.ecommerce.application.integration`. They boot the **full** Spring context once
+(`@SpringBootTest` + `@ActiveProfiles("test")`) and drive the app through the real HTTP stack with
+`MockMvc` — security filters, `ValidationAspect`, controllers, services, JPA.
+
+- **PostgreSQL** runs in a Testcontainers container via the JDBC-URL driver
+  (`jdbc:tc:postgresql:15-alpine:///ecom?TC_DAEMON=true`); Flyway applies the real migrations to it.
+- **The SMS provider is mocked** with an in-process WireMock server on a fixed port (`9576`); tests
+  read the OTP back out of the captured SMS request body to complete each flow.
+- Redis stays disabled (Caffeine cache). The shared context + container are reused for the whole
+  suite (`reuseForks=true`, single fork); each test truncates `app_user` and resets WireMock.
+- Overrides live in `src/test/resources/config/application-test.properties`.
+- `AbstractIntegrationITest` holds the shared harness (WireMock stubs, OTP capture, HTTP + signup
+  helpers). Scenario classes: `SignupFlowITest`, `LoginTicketFlowITest`, `ChangePasswordFlowITest`.
+
+Integration tests run on `verify` (they need Docker running):
+
+```
+mvn verify          # runs *ITest via failsafe
+mvn verify -P release   # *UTest (surefire) + *ITest (failsafe)
 ```
 
 ## Development Setup
@@ -151,15 +184,18 @@ mvn test -P release -pl ecommerce-application,ecommerce-persistence
 
 ```bash
 # Flyway will apply V1__initial_schema.sql automatically on startup
-mvn spring-boot:run -pl ecommerce-application -Dspring-boot.run.profiles=dev
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 ### Properties files
 
-| File                         | Purpose                             |
-|------------------------------|-------------------------------------|
-| `application.properties`     | Base config (committed, no secrets) |
-| `application-dev.properties` | Local overrides (gitignored)        |
+All config files live under `src/main/resources/config/` (`src/test/resources/config/` for tests).
+
+| File                          | Purpose                                            |
+|-------------------------------|----------------------------------------------------|
+| `application.properties`      | Base config (committed, no secrets)                |
+| `application-dev.properties`  | Local `dev` overrides (gitignored)                 |
+| `application-test.properties` | `test` overrides: Testcontainers DB + WireMock SMS |
 
 ## Common Gotchas
 
@@ -171,7 +207,12 @@ mvn spring-boot:run -pl ecommerce-application -Dspring-boot.run.profiles=dev
   There is no `name` column in the DB.
 - **`AppUser.username` = mobile number.** National ID is no longer used as the username.
   It lives in the optional `national_id` column.
-- **`changePassword` does not re-verify the current password** in the service layer — the DTO
-  field `currentPassword` exists for future use but is currently not checked.
+- **`changePassword` does not re-verify the current password.** `ChangePasswordRequestDto` only
+  carries `newPassword` + `confirmPassword`; the service just checks they match and re-hashes.
+- **`AppUser.mobile` is a real column.** It is set (alongside `username`) during signup and is what
+  every `findByMobile` lookup keys on, so the OTP/login flows break if it is left null. `MOBILE` is a
+  nullable, unique `VARCHAR(20)` column in `V1__initial_schema.sql`.
 - **Flyway `baseline-on-migrate=false`** — do not set this to `true` in production without
   also setting the correct `baseline-version` to match the already-applied schema.
+- **`com.telegram.ecommerce` → `com.ecommerce`.** The old package name is gone; the build is now a
+  single Maven module (no `-pl` flags). Stale imports referencing `com.telegram` will not resolve.
