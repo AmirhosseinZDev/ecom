@@ -1,5 +1,0 @@
-{
-  "errorCode": "EcommerceServiceException",
-  "message": "No enum constant com.telegram.ecommerce.application.api.dto.dashboard.enumeration.Role.ROLE_APP_USER",
-  "errorParams": null
-}
