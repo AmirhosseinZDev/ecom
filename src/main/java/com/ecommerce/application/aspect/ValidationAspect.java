@@ -1,10 +1,11 @@
 package com.ecommerce.application.aspect;
 
-import com.ecommerce.application.api.exception.ValidationException;
-import com.tosan.validation.util.ValidationViolationInfo;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.MapUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author AmirHossein ZamanZade
@@ -25,11 +28,8 @@ import java.util.Map;
 @Aspect
 @Order(30)
 public class ValidationAspect {
-    static {
-        System.setProperty("org.apache.el.parser.SKIP_IDENTIFIER_CHECK", "true");
-    }
 
-    private final com.tosan.validation.Validation validator;
+    private final Validator validator;
 
     @Around(value = "execution(* (@org.springframework.web.bind.annotation.RequestMapping *).*(..))")
     public Object validate(ProceedingJoinPoint pjp) throws Throwable {
@@ -41,22 +41,25 @@ public class ValidationAspect {
     }
 
     private void validate(Object[] parameters) {
-        Map<String, List<ValidationViolationInfo>> validationViolationInfo = new HashMap<>();
-        StringBuilder message = new StringBuilder();
+        Map<String, List<String>> validationErrors = new HashMap<>();
         if (parameters != null) {
             for (Object parameter : parameters) {
                 if (parameter != null) {
-                    validationViolationInfo.putAll(validator.validate(parameter));
+                    Set<ConstraintViolation<Object>> violations = validator.validate(parameter);
+                    if (!violations.isEmpty()) {
+                        Map<String, List<String>> errors = violations.stream()
+                                .collect(Collectors.groupingBy(
+                                        v -> v.getPropertyPath().toString(),
+                                        Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())
+                                ));
+                        validationErrors.putAll(errors);
+                    }
                 }
             }
         }
-        if (MapUtils.isNotEmpty(validationViolationInfo)) {
-            message.append("{").append(validationViolationInfo).append("}");
-            if (log.isDebugEnabled()) {
-                log.debug(message.toString());
-            }
-            throw new ValidationException(message.toString(), validationViolationInfo);
+        if (!validationErrors.isEmpty()) {
+            log.debug("Validation errors: {}", validationErrors);
+            throw new EcommerceException(ECOMErrorType.VALIDATION_ERROR, validationErrors);
         }
     }
-
 }

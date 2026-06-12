@@ -1,10 +1,10 @@
 package com.ecommerce.application.service.user;
 
 import com.ecommerce.application.api.dto.user.SignupRequestDto;
-import com.ecommerce.application.api.exception.InvalidSignupTokenException;
-import com.ecommerce.application.api.exception.UserHasAlreadyExistException;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.SignupProperties;
 import com.ecommerce.application.service.jwt.JwtService;
 import com.ecommerce.application.service.ticket.LoginTicketService;
 import com.ecommerce.application.service.ticket.SignupTicketService;
@@ -79,7 +79,9 @@ class UserService_signupUTest {
         SignupRequestDto requestDto = requestDto();
         when(signupCacheService.getSignupData("signup-token")).thenReturn(null);
 
-        assertThrows(InvalidSignupTokenException.class, () -> userService.signup(requestDto));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> userService.signup(requestDto));
+
+        assertEquals(ECOMErrorType.INVALID_SIGNUP_TOKEN, exception.getEcomErrorType());
 
         verify(appUserRepository, never()).save(org.mockito.ArgumentMatchers.any());
     }
@@ -93,7 +95,9 @@ class UserService_signupUTest {
         existingUser.setIsRegistered(true);
         when(appUserRepository.findByMobile("09121111118")).thenReturn(Optional.of(existingUser));
 
-        assertThrows(UserHasAlreadyExistException.class, () -> userService.signup(requestDto));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> userService.signup(requestDto));
+
+        assertEquals(ECOMErrorType.USER_ALREADY_EXISTS, exception.getEcomErrorType());
 
         verify(appUserRepository, never()).save(org.mockito.ArgumentMatchers.any());
         verify(signupCacheService, never()).deleteSignupData(org.mockito.ArgumentMatchers.anyString());

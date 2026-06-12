@@ -1,6 +1,7 @@
 package com.ecommerce.application.invoker.sms;
 
-import com.ecommerce.application.api.exception.EcommerceServiceException;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
 import com.ecommerce.application.invoker.sms.client.SmsClient;
 import com.ecommerce.application.invoker.sms.dto.SmsRequestDto;
 import com.ecommerce.application.invoker.sms.dto.SmsResponseDto;
@@ -27,7 +28,7 @@ public class SmsService {
                         new SmsRequestDto.Parameter(TIME, otpTtl.toString()))));
 
         if (responseDto == null || responseDto.getStatus() == null || responseDto.getStatus() != 1) {
-            throw new EcommerceServiceException("The SMS provider returned an unsuccessful response.");
+            throw new EcommerceException(ECOMErrorType.SMS_SEND_FAILED);
         }
     }
 }

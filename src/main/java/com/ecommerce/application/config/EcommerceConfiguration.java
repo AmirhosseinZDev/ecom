@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.tosan.validation.Validation;
-import com.tosan.validation.core.ValidatorBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -20,9 +19,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Amirhossein Zamanzade
@@ -30,6 +26,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
+@EnableCaching
 public class EcommerceConfiguration implements WebMvcConfigurer {
 
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
@@ -38,15 +35,15 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
     @Bean("devPropertySourcesPlaceholderConfigurer")
     @Profile("dev")
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(ResourceUtil resourceUtil) {
-        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-dev.properties",
-                "config/application-dev.properties");
+        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-dev.yml",
+                "config/application-dev.yml");
     }
 
     @Bean("testPropertySourcesPlaceholderConfigurer")
     @Profile("test")
     public PropertySourcesPlaceholderConfigurer testPropertySourcesPlaceholderConfigurer(ResourceUtil resourceUtil) {
-        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-test.properties",
-                "config/application-test.properties");
+        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-test.yml",
+                "config/application-test.yml");
     }
 
     @Bean("propertySourcesPlaceholderConfigurer")
@@ -64,15 +61,6 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .build();
-    }
-
-    @Bean
-    @Primary
-    public Validation yekanValidation() {
-        Validation validation = new Validation(new ValidatorBuilder(), new HashMap<>());
-        validation.setIgnoredParameters(new ArrayList<>());
-        validation.setSemiIgnoredParameters(getSemiIgnoredParameters());
-        return validation;
     }
 
     private EcommercePlaceHolderConfigurer generatePlaceHolderConfigurer(ResourceUtil resourceUtil, String classpath,
@@ -100,9 +88,5 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
                     new ClassPathResource("/config/application.yml")
             };
         }
-    }
-
-    private List<String> getSemiIgnoredParameters() {
-        return List.of();
     }
 }

@@ -99,8 +99,7 @@ class SignupFlowITest extends AbstractIntegrationITest {
     }
 
     // 5 — resend cooldown: a second send for the same mobile inside the TTL window is rejected and
-    // sends no second SMS. The service raises SendTicketTimeLimitNotExceededException (an unmapped
-    // RuntimeException), which the global advice surfaces as 500.
+    // sends no second SMS. The service raises EcommerceException with SEND_TICKET_TIME_LIMIT error type.
     @Test
     void resending_ticket_within_cooldown_is_rejected() throws Exception {
         String mobile = newMobile();

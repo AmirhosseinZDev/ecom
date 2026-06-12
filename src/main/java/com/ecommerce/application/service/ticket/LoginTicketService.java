@@ -1,9 +1,6 @@
 package com.ecommerce.application.service.ticket;
 
-import com.ecommerce.application.api.exception.InvalidTicketException;
-import com.ecommerce.application.api.exception.SendTicketTimeLimitNotExceededException;
-import com.ecommerce.application.api.exception.TicketValidationBlockException;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
+import com.ecommerce.application.config.properties.LoginProperties;
 import com.ecommerce.application.invoker.sms.SmsService;
 import com.ecommerce.application.service.ticket.dto.TicketGenerateRequestDto;
 import com.ecommerce.application.util.DateUtil;
@@ -31,14 +28,12 @@ public class LoginTicketService extends AbstractTicketService {
         this.loginProperties = loginProperties;
     }
 
-    public void sendTicket(TicketGenerateRequestDto ticketGenerateRequestDto) throws
-            SendTicketTimeLimitNotExceededException, TicketValidationBlockException {
+    public void sendTicket(TicketGenerateRequestDto ticketGenerateRequestDto) {
         sendTicketMessage(ticketGenerateRequestDto, prepareTicket(ticketGenerateRequestDto));
     }
 
     @Override
-    public void validateTicket(String cacheKey, String ticket, String mobileNumber) throws InvalidTicketException,
-            TicketValidationBlockException {
+    public void validateTicket(String cacheKey, String ticket, String mobileNumber) {
         super.validateTicket(cacheKey, ticket, mobileNumber);
         deleteTicket(cacheKey, null);
     }

@@ -1,0 +1,79 @@
+# Server
+server:
+  port: 8080
+
+spring:
+  # DB
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: ecom
+    password: ECOM
+    driverClassName: org.postgresql.Driver
+    hikari:
+      # حداکثر زمان برای اتصال‌های بی‌استفاده به DB عملیات به میلی ثانبه
+      idle-timeout: 900000
+      # حداکثر اتصال‌های همزمانی که میتوان به DB عملیات داشت.
+      # برای عدم محدودیت می تواند از صفر یا اعداد منفی استفاده شود
+      maximum-pool-size: 200
+      # زمان انتظار برای دریافت اتصال به DB عملیات. پس از این زمان، خطای timeout رخ میدهد. واحد آن میلی ثانیه است.
+      connection-timeout: 6000
+      # حداقل اتصالهایی که میتوان به هر پارتیشن DB عملیات داشت.
+      minimum-idle: 5
+      # حد اکثر زمان کلی اعتبار یک connection در DB عملیاتی. (شامل زمان های idle و in-use) به میلی ثانیه
+      max-lifetime: 43200000
+  # حداکثر زمان انتظار برای انجام عملیات یک تراکنش
+  transaction:
+    default-timeout: 600s
+  jpa:
+    open-in-view: false
+  # Flyway
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    # On a fresh DB, Flyway applies V1→V2 in order.
+    # On an existing DB already set up by ddl-auto=update, set baseline-on-migrate=true
+    # and baseline-version to the last migration already present in the DB schema.
+    baseline-on-migrate: false
+    out-of-order: false
+  # Redis Config (used when app.cache.type=redis)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# Security
+security:
+  jwt:
+    expiration-time: 1h
+    secret-key: Y2hhbmdlLW1lLWNoYW5nZS1tZS1jaGFuZ2UtbWUtY2hhbmdlLW1lLWNoYW5nZS1tZS1jaGFuZ2UtbWU=
+
+# Cache Config
+app:
+  cache:
+    # Available types: caffeine, redis
+    type: caffeine
+    caffeine:
+      ttl: 10m
+      max-size: 10000
+  # Signup
+  signup:
+    ticket:
+      template-id: 123456
+      length: 6
+      time-to-live: 2m
+      block-duration: 10m
+      max-failure-count: 5
+    token-ttl: 10m
+  # Login
+  login:
+    ticket:
+      template-id: 123456
+      length: 6
+      time-to-live: 2m
+      block-duration: 10m
+      max-failure-count: 5
+    token-ttl: 1h
+  # SMS
+  sms:
+    api-key: 2d2Oox8IDA69FRMfCjOokDKmsgUazaNSOrZGIUxja4DcL2yc
+    base-url: https://api.sms.ir

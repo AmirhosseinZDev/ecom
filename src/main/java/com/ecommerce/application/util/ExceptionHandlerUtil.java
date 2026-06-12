@@ -1,8 +1,8 @@
 package com.ecommerce.application.util;
 
 import com.ecommerce.application.advice.ExceptionParam;
+import com.ecommerce.application.api.exception.ECOMErrorType;
 import com.ecommerce.application.api.exception.EcommerceException;
-import com.ecommerce.application.api.exception.EcommerceServiceException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,9 @@ public class ExceptionHandlerUtil {
     private final ObjectMapper objectMapper;
 
     public ExceptionParam generateExceptionParam(Throwable exception) {
-        Map<String, Object> exceptionParams;
         if (exception instanceof EcommerceException e) {
-            exceptionParams = convertToExceptionParam(exception);
-            return generateExceptionParam(e.getMessage(), e.getErrorCode(), exceptionParams);
-        } else if (exception instanceof EcommerceServiceException e) {
-            exceptionParams = convertToExceptionParam(exception);
-            return generateExceptionParam(e.getMessage(), e.getErrorCode(), exceptionParams);
+            Map<String, Object> exceptionParams = convertToExceptionParam(exception);
+            return generateExceptionParam(e.getEcomErrorType(), exceptionParams);
         }
         return handleThrowable(exception);
     }
@@ -42,7 +38,7 @@ public class ExceptionHandlerUtil {
             };
             return objectMapper.readValue(jsonString, typeRef);
         } catch (Exception e) {
-            throw new EcommerceServiceException("error in converting Json to map JSONObject", e);
+            throw new EcommerceException(ECOMErrorType.JSON_CONVERSION_ERROR);
         }
     }
 
@@ -50,20 +46,18 @@ public class ExceptionHandlerUtil {
         try {
             return objectMapper.writer().writeValueAsString(object);
         } catch (Exception e) {
-            throw new EcommerceServiceException("error in converting object to Json", e);
+            throw new EcommerceException(ECOMErrorType.JSON_CONVERSION_ERROR);
         }
     }
 
     private ExceptionParam handleThrowable(Throwable throwable) {
-        EcommerceServiceException serviceException = new EcommerceServiceException(throwable.getMessage());
-        return generateExceptionParam(serviceException.getMessage(), serviceException.getErrorCode(),
-                null);
+        return generateExceptionParam(ECOMErrorType.GENERAL_ERROR, null);
     }
 
-    private ExceptionParam generateExceptionParam(String message, String errorCode, Map<String, Object> errorParams) {
+    private ExceptionParam generateExceptionParam(ECOMErrorType errorType, Map<String, Object> errorParams) {
         ExceptionParam exceptionParam = new ExceptionParam();
-        exceptionParam.setMessage(message);
-        exceptionParam.setErrorCode(errorCode);
+        exceptionParam.setMessage(errorType.getMessageKey());
+        exceptionParam.setErrorCode(errorType.name());
         exceptionParam.setErrorParams(errorParams);
         return exceptionParam;
     }

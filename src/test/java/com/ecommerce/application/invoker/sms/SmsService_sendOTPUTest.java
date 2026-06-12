@@ -1,6 +1,7 @@
 package com.ecommerce.application.invoker.sms;
 
-import com.ecommerce.application.api.exception.EcommerceServiceException;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
 import com.ecommerce.application.invoker.sms.client.SmsClient;
 import com.ecommerce.application.invoker.sms.dto.SmsRequestDto;
 import com.ecommerce.application.invoker.sms.dto.SmsResponseDto;
@@ -50,15 +51,19 @@ class SmsService_sendOTPUTest {
         responseDto.setStatus(0);
         when(smsClient.sendMessage(org.mockito.ArgumentMatchers.any())).thenReturn(responseDto);
 
-        assertThrows(EcommerceServiceException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> smsService.sendOTP(10, "09123456789", "1234", 2));
+
+        assertEquals(ECOMErrorType.SMS_SEND_FAILED, exception.getEcomErrorType());
     }
 
     @Test
     void null_provider_response_throws_service_exception() {
         when(smsClient.sendMessage(org.mockito.ArgumentMatchers.any())).thenReturn(null);
 
-        assertThrows(EcommerceServiceException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> smsService.sendOTP(10, "09123456789", "1234", 2));
+
+        assertEquals(ECOMErrorType.SMS_SEND_FAILED, exception.getEcomErrorType());
     }
 }

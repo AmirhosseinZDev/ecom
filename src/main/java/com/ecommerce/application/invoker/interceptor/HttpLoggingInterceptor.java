@@ -1,6 +1,7 @@
 package com.ecommerce.application.invoker.interceptor;
 
-import com.ecommerce.application.api.exception.EcommerceServiceException;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
 import com.ecommerce.application.invoker.interceptor.wrraper.HttpResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class HttpLoggingInterceptor implements ClientHttpRequestInterceptor {
                 log.info(httpLoggingInterceptorUtil.getExceptionDetailContent(e, webServiceName,
                         System.currentTimeMillis() - startTime));
             }
-            throw new EcommerceServiceException(e.getMessage(), e);
+            throw new EcommerceException(ECOMErrorType.GENERAL_ERROR);
         }
     }
 }

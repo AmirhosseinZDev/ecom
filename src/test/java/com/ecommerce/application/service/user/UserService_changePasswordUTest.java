@@ -1,10 +1,10 @@
 package com.ecommerce.application.service.user;
 
 import com.ecommerce.application.api.dto.user.ChangePasswordRequestDto;
-import com.ecommerce.application.api.exception.InvalidPasswordException;
-import com.ecommerce.application.api.exception.UserNotFoundException;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.SignupProperties;
 import com.ecommerce.application.service.jwt.JwtService;
 import com.ecommerce.application.service.ticket.LoginTicketService;
 import com.ecommerce.application.service.ticket.SignupTicketService;
@@ -67,8 +67,10 @@ class UserService_changePasswordUTest {
 
     @Test
     void mismatched_new_and_confirm_passwords_throws_invalid_password_exception() {
-        assertThrows(InvalidPasswordException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> userService.changePassword(requestDto("abc", "xyz"), 1L));
+
+        assertEquals(ECOMErrorType.INVALID_PASSWORD, exception.getEcomErrorType());
 
         verifyNoInteractions(appUserRepository);
     }
@@ -77,16 +79,20 @@ class UserService_changePasswordUTest {
     void user_not_found_throws_user_not_found_exception() {
         when(appUserRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> userService.changePassword(requestDto("new-pass", "new-pass"), 99L));
+
+        assertEquals(ECOMErrorType.USER_NOT_FOUND, exception.getEcomErrorType());
 
         verify(appUserRepository, never()).save(any());
     }
 
     @Test
     void mismatched_passwords_check_happens_before_db_lookup() throws Exception {
-        assertThrows(InvalidPasswordException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> userService.changePassword(requestDto("a", "b"), 1L));
+
+        assertEquals(ECOMErrorType.INVALID_PASSWORD, exception.getEcomErrorType());
 
         verifyNoInteractions(appUserRepository);
     }

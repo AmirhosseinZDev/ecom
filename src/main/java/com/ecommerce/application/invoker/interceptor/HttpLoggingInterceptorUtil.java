@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
@@ -33,7 +32,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HttpLoggingInterceptorUtil {
 
-    private static final ObjectMapper mapper = (new Jackson2ObjectMapperBuilder()).build();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
         mapper.enable(SerializationFeature.INDENT_OUTPUT)
@@ -100,9 +99,7 @@ public class HttpLoggingInterceptorUtil {
 
     private HttpHeaders getMaskedHeaders(HttpHeaders headers) {
         HttpHeaders securedHeaders = new HttpHeaders();
-        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-            String headerName = entry.getKey();
-            List<String> headerValues = entry.getValue();
+        headers.forEach((headerName, headerValues) -> {
             List<String> maskedHeaderValues = new ArrayList<>();
             headerValues.forEach(headerValue -> {
                 if (headerValue != null && !headerValue.isEmpty()) {
@@ -115,7 +112,7 @@ public class HttpLoggingInterceptorUtil {
                 }
             });
             securedHeaders.put(headerName, maskedHeaderValues);
-        }
+        });
         return securedHeaders;
     }
 

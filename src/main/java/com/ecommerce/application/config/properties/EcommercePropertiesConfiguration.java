@@ -1,7 +1,5 @@
 package com.ecommerce.application.config.properties;
 
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
 import com.ecommerce.application.invoker.sms.config.properties.SmsProperties;
 import jakarta.validation.Valid;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,21 +15,21 @@ public class EcommercePropertiesConfiguration {
 
     @Bean
     @Valid
-    @ConfigurationProperties(prefix = "signup")
+    @ConfigurationProperties(prefix = "app.signup")
     public SignupProperties signupProperties() {
         return new SignupProperties();
     }
 
     @Bean
     @Valid
-    @ConfigurationProperties(prefix = "login")
+    @ConfigurationProperties(prefix = "app.login")
     public LoginProperties loginProperties() {
         return new LoginProperties();
     }
 
     @Bean
     @Valid
-    @ConfigurationProperties(prefix = "sms")
+    @ConfigurationProperties(prefix = "app.sms")
     public SmsProperties smsProperties() {
         return new SmsProperties();
     }

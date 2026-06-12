@@ -2,10 +2,11 @@ package com.ecommerce.application.service.user;
 
 import com.ecommerce.application.api.dto.user.SendSignupTicketRequestDto;
 import com.ecommerce.application.api.dto.user.SendSignupTicketResponseDto;
-import com.ecommerce.application.api.exception.TicketValidationBlockException;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
-import com.ecommerce.application.config.properties.dto.TicketProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.SignupProperties;
+import com.ecommerce.application.config.properties.TicketProperties;
 import com.ecommerce.application.service.jwt.JwtService;
 import com.ecommerce.application.service.ticket.LoginTicketService;
 import com.ecommerce.application.service.ticket.SignupTicketService;
@@ -82,22 +83,25 @@ class UserService_sendSignupTicketUTest {
     void block_exception_is_propagated() throws Exception {
         SendSignupTicketRequestDto requestDto = new SendSignupTicketRequestDto();
         requestDto.setMobileNumber("09121111118");
-        doThrow(new TicketValidationBlockException("blocked"))
+        doThrow(new EcommerceException(ECOMErrorType.TICKET_BLOCKED))
                 .when(signupTicketService).sendTicket(any());
 
-        assertThrows(TicketValidationBlockException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> userService.sendSignupTicket(requestDto));
+
+        assertEquals(ECOMErrorType.TICKET_BLOCKED, exception.getEcomErrorType());
     }
 
     @Test
     void send_ticket_time_limit_exception_is_propagated() throws Exception {
         SendSignupTicketRequestDto requestDto = new SendSignupTicketRequestDto();
         requestDto.setMobileNumber("09121111118");
-        doThrow(new com.ecommerce.application.api.exception.SendTicketTimeLimitNotExceededException(
-                "too fast"))
+        doThrow(new EcommerceException(ECOMErrorType.SEND_TICKET_TIME_LIMIT))
                 .when(signupTicketService).sendTicket(any());
 
-        assertThrows(com.ecommerce.application.api.exception.SendTicketTimeLimitNotExceededException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> userService.sendSignupTicket(requestDto));
+
+        assertEquals(ECOMErrorType.SEND_TICKET_TIME_LIMIT, exception.getEcomErrorType());
     }
 }

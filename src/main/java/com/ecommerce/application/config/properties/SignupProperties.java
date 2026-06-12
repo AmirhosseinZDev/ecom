@@ -1,4 +1,4 @@
-package com.ecommerce.application.config.properties.dto;
+package com.ecommerce.application.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,12 +7,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import java.time.Duration;
 
 /**
- * @author AmirHossein ZamanZade
- * @since 5/29/26
+ * @author E.habibi
+ * @since 5/23/2023
  */
 @Getter
 @Setter
-public class LoginProperties {
+public class SignupProperties {
 
     @NestedConfigurationProperty
     private TicketProperties ticket;
