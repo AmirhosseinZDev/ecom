@@ -105,7 +105,7 @@ class SignupFlowITest extends AbstractIntegrationITest {
         String mobile = newMobile();
         sendSignupTicket(mobile).andExpect(status().isOk());
 
-        sendSignupTicket(mobile).andExpect(status().is5xxServerError());
+        sendSignupTicket(mobile).andExpect(status().is4xxClientError());
         assertEquals(1, smsRequestCount(), "no second OTP SMS should be sent during the cooldown window");
     }
 
@@ -136,7 +136,7 @@ class SignupFlowITest extends AbstractIntegrationITest {
         sendSignupTicket(mobile).andExpect(status().isOk());
         String signupToken = validateSignupTicket(mobile, captureLastOtp());
 
-        signup(signupToken).andExpect(status().isBadRequest());
+        signup(signupToken).andExpect(status().isConflict());
 
         assertEquals(1, countUsers(mobile), "the duplicate signup must not create a second row");
     }

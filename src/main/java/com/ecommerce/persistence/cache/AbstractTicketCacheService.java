@@ -62,9 +62,7 @@ public abstract class AbstractTicketCacheService {
     }
 
     public void updateTicketInfoDto(String key, TicketInfoCacheDto ticketInfoCacheDto) {
-        if (cacheManager.exists(getTicketCacheName().name(), key)) {
-            cacheManager.put(getTicketCacheName().name(), key, ticketInfoCacheDto, Duration.ZERO);
-        }
+        cacheManager.replace(getTicketCacheName().name(), key, ticketInfoCacheDto);
     }
 
     public Duration getDurationUntil(Date expirationDate) {

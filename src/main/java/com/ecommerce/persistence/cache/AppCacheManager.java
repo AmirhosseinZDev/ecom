@@ -19,4 +19,10 @@ public interface AppCacheManager {
     boolean exists(String cacheName, String key);
 
     <T> T getAndPut(String cacheName, String key, T value, Duration ttl);
+
+    /**
+     * Updates the value of an existing entry without changing its TTL.
+     * If the entry does not exist, this is a no-op.
+     */
+    <T> void replace(String cacheName, String key, T value);
 }

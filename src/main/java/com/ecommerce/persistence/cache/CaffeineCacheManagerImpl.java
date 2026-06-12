@@ -79,4 +79,13 @@ public class CaffeineCacheManagerImpl implements AppCacheManager {
         log.debug("Cache GET_AND_PUT - cache: {}, key: {}", cacheName, key);
         return oldValue;
     }
+
+    @Override
+    public <T> void replace(String cacheName, String key, T value) {
+        Cache<String, Object> cache = getOrCreateCache(cacheName);
+        if (cache.getIfPresent(key) != null) {
+            cache.put(key, value);
+            log.debug("Cache REPLACE - cache: {}, key: {}", cacheName, key);
+        }
+    }
 }

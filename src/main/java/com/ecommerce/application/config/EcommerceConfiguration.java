@@ -42,8 +42,8 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
     @Bean("testPropertySourcesPlaceholderConfigurer")
     @Profile("test")
     public PropertySourcesPlaceholderConfigurer testPropertySourcesPlaceholderConfigurer(ResourceUtil resourceUtil) {
-        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-test.yml",
-                "config/application-test.yml");
+        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-test.properties",
+                "config/application-test.properties");
     }
 
     @Bean("propertySourcesPlaceholderConfigurer")
@@ -76,16 +76,14 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
     private Resource[] getResources(String classpath, String fileSystemPath) {
         if (classpath != null && fileSystemPath != null) {
             return new Resource[]{
-                    new ClassPathResource("/config/application.properties"),
+                    new ClassPathResource("/config/application.yml"),
                     new ClassPathResource(classpath),
-                    new FileSystemResource(fileSystemPath),
-                    new ClassPathResource("/config/application.yml")
+                    new FileSystemResource(fileSystemPath)
             };
         } else {
             return new Resource[]{
-                    new ClassPathResource("/config/application.properties"),
-                    new FileSystemResource("config/application.properties"),
-                    new ClassPathResource("/config/application.yml")
+                    new ClassPathResource("/config/application.yml"),
+                    new FileSystemResource("config/application.properties")
             };
         }
     }

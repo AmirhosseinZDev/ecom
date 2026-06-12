@@ -76,4 +76,19 @@ public class RedisCacheManagerImpl implements AppCacheManager {
         log.debug("Cache GET_AND_PUT - cache: {}, key: {}, ttl: {}", cacheName, key, ttl);
         return oldValue;
     }
+
+    @Override
+    public <T> void replace(String cacheName, String key, T value) {
+        String fullKey = buildKey(cacheName, key);
+        RBucket<T> bucket = redissonClient.getBucket(fullKey);
+        long remainMs = bucket.remainTimeToLive();
+        if (remainMs > 0) {
+            bucket.set(value, Duration.ofMillis(remainMs));
+        } else if (remainMs == -1) {
+            // Key exists but has no TTL — update value without setting one
+            bucket.set(value);
+        }
+        // remainMs == -2 means key does not exist — no-op
+        log.debug("Cache REPLACE - cache: {}, key: {}, remainMs: {}", cacheName, key, remainMs);
+    }
 }

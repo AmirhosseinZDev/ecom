@@ -13,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Map;
@@ -69,6 +72,7 @@ abstract class AbstractIntegrationITest {
     }
 
     @Autowired
+    private WebApplicationContext wac;
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
@@ -83,6 +87,9 @@ abstract class AbstractIntegrationITest {
 
     @BeforeEach
     void resetState() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
         WIREMOCK.resetAll();
         stubSmsSuccess();
         jdbcTemplate.execute("TRUNCATE TABLE app_user RESTART IDENTITY CASCADE");

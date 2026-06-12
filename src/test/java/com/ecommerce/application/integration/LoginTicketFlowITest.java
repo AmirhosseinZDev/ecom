@@ -45,7 +45,7 @@ class LoginTicketFlowITest extends AbstractIntegrationITest {
     @Test
     void login_ticket_for_unregistered_mobile_is_rejected_without_sms() throws Exception {
         postJson("/user/login-ticket", Map.of("mobileNumber", newMobile()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
         assertEquals(0, smsRequestCount());
     }
 
@@ -56,7 +56,7 @@ class LoginTicketFlowITest extends AbstractIntegrationITest {
         sendSignupTicket(mobile).andExpect(status().isOk());
 
         postJson("/user/login-ticket", Map.of("mobileNumber", mobile))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
         assertEquals(1, smsRequestCount(), "only the signup OTP was sent; no login OTP");
     }
 
