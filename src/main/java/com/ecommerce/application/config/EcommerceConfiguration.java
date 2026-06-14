@@ -39,13 +39,6 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
                 "config/application-dev.yml");
     }
 
-    @Bean("testPropertySourcesPlaceholderConfigurer")
-    @Profile("test")
-    public PropertySourcesPlaceholderConfigurer testPropertySourcesPlaceholderConfigurer(ResourceUtil resourceUtil) {
-        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-test.properties",
-                "config/application-test.properties");
-    }
-
     @Bean("propertySourcesPlaceholderConfigurer")
     @ConditionalOnMissingBean(PropertySourcesPlaceholderConfigurer.class)
     public PropertySourcesPlaceholderConfigurer productionPropertySourcesPlaceholderConfigurer(

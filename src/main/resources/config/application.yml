@@ -3,6 +3,9 @@ server:
   port: 8080
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.redisson.spring.starter.RedissonAutoConfigurationV2
   # DB
   datasource:
     url: jdbc:postgresql://localhost:5432/mydb

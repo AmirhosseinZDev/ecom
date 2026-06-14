@@ -1,0 +1,21 @@
+# Build output — never needed in the build context
+target/
+
+# Version control
+.git/
+.gitignore
+
+# IDE files
+.idea/
+*.iml
+*.class
+
+# Logs
+logs/
+
+# Documentation (not needed to build the image)
+docs/
+*.md
+
+# Local config overrides that must not leak into the image
+src/main/resources/config/application-dev.yml

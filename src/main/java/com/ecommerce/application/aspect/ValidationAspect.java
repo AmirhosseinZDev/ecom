@@ -13,7 +13,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,18 +40,17 @@ public class ValidationAspect {
     }
 
     private void validate(Object[] parameters) {
-        Map<String, List<String>> validationErrors = new HashMap<>();
+        Map<String, Object> validationErrors = new HashMap<>();
         if (parameters != null) {
             for (Object parameter : parameters) {
                 if (parameter != null) {
                     Set<ConstraintViolation<Object>> violations = validator.validate(parameter);
                     if (!violations.isEmpty()) {
-                        Map<String, List<String>> errors = violations.stream()
+                        validationErrors.putAll(violations.stream()
                                 .collect(Collectors.groupingBy(
                                         v -> v.getPropertyPath().toString(),
                                         Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())
-                                ));
-                        validationErrors.putAll(errors);
+                                )));
                     }
                 }
             }

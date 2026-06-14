@@ -34,11 +34,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * <p>Boots the full Spring context and drives the application through the real HTTP layer
  * (security filters, {@code ValidationAspect}, controllers, services, JPA). The {@code "test"} profile
- * is active, which makes the application load {@code classpath:/config/application-test.properties} on
- * top of the bundled {@code config/application.properties} (the app's own placeholder configurer plus
- * Spring Boot's profile config loading) — that override file points the datasource at a Testcontainers
- * JDBC URL ({@code jdbc:tc:postgresql:...}, container created on first connection and kept for the whole
- * JVM via {@code TC_DAEMON=true}) and the SMS client at the local {@link WireMockServer}. Redis stays
+ * is active, which makes Spring Boot load {@code classpath:/config/application-test.yml} on top of
+ * {@code config/application.yml} — that override file points the datasource at a Testcontainers JDBC
+ * URL ({@code jdbc:tc:postgresql:...}, container created on first connection and kept for the whole JVM
+ * via {@code TC_DAEMON=true}) and the SMS client at the local {@link WireMockServer}. Redis stays
  * disabled in favour of the local Caffeine cache.
  *
  * <p><b>One application instance for the whole suite.</b> Every {@code *ITest} extends this class with
