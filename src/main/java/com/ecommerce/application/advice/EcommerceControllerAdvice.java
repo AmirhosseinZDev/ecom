@@ -1,8 +1,6 @@
 package com.ecommerce.application.advice;
 
 import com.ecommerce.application.api.exception.EcommerceException;
-import com.ecommerce.application.api.exception.EcommerceServiceException;
-import com.ecommerce.application.api.exception.ValidationException;
 import com.ecommerce.application.util.ExceptionHandlerUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,22 +22,10 @@ public class EcommerceControllerAdvice extends ResponseEntityExceptionHandler {
 
     private final ExceptionHandlerUtil exceptionHandlerUtil;
 
-
     @ExceptionHandler(EcommerceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionParam handleYekServerException(EcommerceException exception) {
-        return exceptionHandlerUtil.generateExceptionParam(exception);
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionParam handleValidationException(ValidationException exception) {
-        return exceptionHandlerUtil.generateExceptionParam(exception);
-    }
-
-    @ExceptionHandler(EcommerceServiceException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionParam handleYekServerRuntimeException(EcommerceServiceException exception) {
+    public ExceptionParam handleEcommerceException(EcommerceException exception,
+            jakarta.servlet.http.HttpServletResponse response) {
+        response.setStatus(exception.getEcomErrorType().getHttpStatus().value());
         return exceptionHandlerUtil.generateExceptionParam(exception);
     }
 

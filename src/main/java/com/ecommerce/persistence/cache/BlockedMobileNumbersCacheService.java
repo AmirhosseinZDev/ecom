@@ -1,10 +1,8 @@
 package com.ecommerce.persistence.cache;
 
-import com.tosan.client.redis.api.TedissonCacheManager;
-import com.tosan.client.redis.cacheconfig.CacheConfig;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 /**
  * @author AmirHossein ZamanZade
@@ -13,21 +11,19 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class BlockedMobileNumbersCacheService {
 
-    private final TedissonCacheManager cacheManager;
+    private static final String CACHE_NAME = CacheName.BLOCKED_MOBILE_NUMBER.name();
 
-    public BlockedMobileNumbersCacheService(TedissonCacheManager cacheManager) {
+    private final AppCacheManager cacheManager;
+
+    public BlockedMobileNumbersCacheService(AppCacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setMaxSize(10000);
-        cacheManager.createCache(CacheName.BLOCKED_MOBILE_NUMBER.name(), cacheConfig);
     }
 
     public boolean isMobileNumberExistInBlockedMobileNumbers(String key) {
-        return cacheManager.isKeyInCache(CacheName.BLOCKED_MOBILE_NUMBER.name(), key);
+        return cacheManager.exists(CACHE_NAME, key);
     }
 
-    public void addMobileNumber(String key, long blockDuration) {
-        cacheManager.addItemToCache(CacheName.BLOCKED_MOBILE_NUMBER.name(), key, "", blockDuration, null
-                , TimeUnit.SECONDS);
+    public void addMobileNumber(String key, long blockDurationSeconds) {
+        cacheManager.put(CACHE_NAME, key, "blocked", Duration.ofSeconds(blockDurationSeconds));
     }
 }

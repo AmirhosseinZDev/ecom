@@ -2,11 +2,11 @@ package com.ecommerce.application.service.user;
 
 import com.ecommerce.application.api.dto.user.SendLoginTicketRequestDto;
 import com.ecommerce.application.api.dto.user.SendSignupTicketResponseDto;
-import com.ecommerce.application.api.exception.TicketValidationBlockException;
-import com.ecommerce.application.api.exception.UserNotFoundException;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
-import com.ecommerce.application.config.properties.dto.TicketProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.SignupProperties;
+import com.ecommerce.application.config.properties.TicketProperties;
 import com.ecommerce.application.service.jwt.JwtService;
 import com.ecommerce.application.service.ticket.LoginTicketService;
 import com.ecommerce.application.service.ticket.SignupTicketService;
@@ -85,7 +85,9 @@ class UserService_sendLoginTicketUTest {
     void throws_user_not_found_when_mobile_not_in_db() {
         when(appUserRepository.findByMobile("09121111118")).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.sendLoginTicket(requestDto()));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> userService.sendLoginTicket(requestDto()));
+
+        assertEquals(ECOMErrorType.USER_NOT_FOUND, exception.getEcomErrorType());
 
         verifyNoInteractions(loginTicketService);
     }
@@ -96,7 +98,9 @@ class UserService_sendLoginTicketUTest {
         appUser.setIsRegistered(false);
         when(appUserRepository.findByMobile("09121111118")).thenReturn(Optional.of(appUser));
 
-        assertThrows(UserNotFoundException.class, () -> userService.sendLoginTicket(requestDto()));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> userService.sendLoginTicket(requestDto()));
+
+        assertEquals(ECOMErrorType.USER_NOT_FOUND, exception.getEcomErrorType());
 
         verifyNoInteractions(loginTicketService);
     }
@@ -106,10 +110,12 @@ class UserService_sendLoginTicketUTest {
         AppUser appUser = new AppUser();
         appUser.setIsRegistered(true);
         when(appUserRepository.findByMobile("09121111118")).thenReturn(Optional.of(appUser));
-        doThrow(new TicketValidationBlockException("blocked"))
+        doThrow(new EcommerceException(ECOMErrorType.TICKET_BLOCKED))
                 .when(loginTicketService).sendTicket(any());
 
-        assertThrows(TicketValidationBlockException.class, () -> userService.sendLoginTicket(requestDto()));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> userService.sendLoginTicket(requestDto()));
+
+        assertEquals(ECOMErrorType.TICKET_BLOCKED, exception.getEcomErrorType());
     }
 
     private SendLoginTicketRequestDto requestDto() {

@@ -1,9 +1,9 @@
 package com.ecommerce.application.service.ticket;
 
-import com.ecommerce.application.api.exception.SendTicketTimeLimitNotExceededException;
-import com.ecommerce.application.api.exception.TicketValidationBlockException;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
-import com.ecommerce.application.config.properties.dto.TicketProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.SignupProperties;
+import com.ecommerce.application.config.properties.TicketProperties;
 import com.ecommerce.application.invoker.sms.SmsService;
 import com.ecommerce.application.service.ticket.dto.TicketGenerateRequestDto;
 import com.ecommerce.application.util.DateUtil;
@@ -69,7 +69,9 @@ class SignupTicketService_sendTicketUTest {
         TicketGenerateRequestDto requestDto = requestDto();
         when(ticketCacheService.getTicketInfoDto("ticket-cache")).thenReturn(new TicketInfoCacheDto("1234"));
 
-        assertThrows(SendTicketTimeLimitNotExceededException.class, () -> signupTicketService.sendTicket(requestDto));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> signupTicketService.sendTicket(requestDto));
+
+        assertEquals(ECOMErrorType.SEND_TICKET_TIME_LIMIT, exception.getEcomErrorType());
 
         verify(smsService, never()).sendOTP(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(),
                 org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
@@ -81,7 +83,9 @@ class SignupTicketService_sendTicketUTest {
         when(blockedMobileNumbersCacheService.isMobileNumberExistInBlockedMobileNumbers("09121111118"))
                 .thenReturn(true);
 
-        assertThrows(TicketValidationBlockException.class, () -> signupTicketService.sendTicket(requestDto));
+        EcommerceException exception = assertThrows(EcommerceException.class, () -> signupTicketService.sendTicket(requestDto));
+
+        assertEquals(ECOMErrorType.TICKET_BLOCKED, exception.getEcomErrorType());
 
         verify(smsService, never()).sendOTP(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(),
                 org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());

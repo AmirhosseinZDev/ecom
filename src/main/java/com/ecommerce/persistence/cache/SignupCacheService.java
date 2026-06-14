@@ -1,11 +1,9 @@
 package com.ecommerce.persistence.cache;
 
 import com.ecommerce.persistence.cache.dto.SignupData;
-import com.tosan.client.redis.api.TedissonCacheManager;
-import com.tosan.client.redis.cacheconfig.CacheConfig;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 /**
  * @author AmirHossein ZamanZade
@@ -14,25 +12,23 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SignupCacheService {
 
-    private final TedissonCacheManager cacheManager;
+    private static final String CACHE_NAME = CacheName.SIGNUP_TOKEN.name();
 
-    public SignupCacheService(TedissonCacheManager cacheManager) {
+    private final AppCacheManager cacheManager;
+
+    public SignupCacheService(AppCacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setMaxSize(10000);
-        cacheManager.createCache(CacheName.SIGNUP_TOKEN.name(), cacheConfig);
     }
 
     public SignupData getSignupData(String key) {
-        return cacheManager.getItemFromCache(CacheName.SIGNUP_TOKEN.name(), key);
+        return cacheManager.get(CACHE_NAME, key);
     }
 
     public void addSignupData(String key, SignupData signupData, long ttlInSeconds) {
-        cacheManager.addItemToCache(CacheName.SIGNUP_TOKEN.name(), key, signupData,
-                ttlInSeconds, null, TimeUnit.SECONDS);
+        cacheManager.put(CACHE_NAME, key, signupData, Duration.ofSeconds(ttlInSeconds));
     }
 
     public void deleteSignupData(String key) {
-        cacheManager.removeItemFromCache(CacheName.SIGNUP_TOKEN.name(), key);
+        cacheManager.evict(CACHE_NAME, key);
     }
 }

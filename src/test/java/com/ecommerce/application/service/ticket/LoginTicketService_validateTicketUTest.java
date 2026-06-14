@@ -1,9 +1,9 @@
 package com.ecommerce.application.service.ticket;
 
-import com.ecommerce.application.api.exception.InvalidTicketException;
-import com.ecommerce.application.api.exception.TicketValidationBlockException;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.TicketProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.TicketProperties;
 import com.ecommerce.application.invoker.sms.SmsService;
 import com.ecommerce.application.util.DateUtil;
 import com.ecommerce.persistence.cache.BlockedMobileNumbersCacheService;
@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -49,7 +50,7 @@ class LoginTicketService_validateTicketUTest {
     }
 
     @Test
-    void valid_ticket_deletes_ticket_from_cache_after_validation() throws Exception {
+    void valid_ticket_deletes_ticket_from_cache_after_validation() {
         when(ticketCacheService.getTicketInfoDto("cache-key")).thenReturn(new TicketInfoCacheDto("123456"));
 
         loginTicketService.validateTicket("cache-key", "123456", "09121111118");
@@ -62,9 +63,10 @@ class LoginTicketService_validateTicketUTest {
         TicketInfoCacheDto ticketInfoCacheDto = new TicketInfoCacheDto("123456");
         when(ticketCacheService.getTicketInfoDto("cache-key")).thenReturn(ticketInfoCacheDto);
 
-        assertThrows(InvalidTicketException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> loginTicketService.validateTicket("cache-key", "000000", "09121111118"));
 
+        assertEquals(ECOMErrorType.INVALID_TICKET, exception.getEcomErrorType());
         verify(ticketCacheService).updateTicketInfoDto("cache-key", ticketInfoCacheDto);
         verify(blockedMobileNumbersCacheService, never())
                 .addMobileNumber(any(), anyLong());
@@ -76,9 +78,10 @@ class LoginTicketService_validateTicketUTest {
         ticketInfoCacheDto.incrementAndGetFailureCount();
         when(ticketCacheService.getTicketInfoDto("cache-key")).thenReturn(ticketInfoCacheDto);
 
-        assertThrows(TicketValidationBlockException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> loginTicketService.validateTicket("cache-key", "000000", "09121111118"));
 
+        assertEquals(ECOMErrorType.TICKET_BLOCKED, exception.getEcomErrorType());
         verify(ticketCacheService).deleteTicket("cache-key", null);
         verify(blockedMobileNumbersCacheService).addMobileNumber("09121111118", 600L);
     }
@@ -87,7 +90,9 @@ class LoginTicketService_validateTicketUTest {
     void null_ticket_in_cache_throws_invalid_ticket_exception() {
         when(ticketCacheService.getTicketInfoDto("cache-key")).thenReturn(null);
 
-        assertThrows(InvalidTicketException.class,
+        EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> loginTicketService.validateTicket("cache-key", "123456", "09121111118"));
+
+        assertEquals(ECOMErrorType.INVALID_TICKET, exception.getEcomErrorType());
     }
 }

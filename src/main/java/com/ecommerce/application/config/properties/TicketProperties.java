@@ -1,4 +1,4 @@
-package com.ecommerce.application.config.properties.dto;
+package com.ecommerce.application.config.properties;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

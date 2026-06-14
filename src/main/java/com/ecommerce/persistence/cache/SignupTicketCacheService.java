@@ -1,6 +1,5 @@
 package com.ecommerce.persistence.cache;
 
-import com.tosan.client.redis.api.TedissonCacheManager;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SignupTicketCacheService extends AbstractTicketCacheService {
 
-    public SignupTicketCacheService(TedissonCacheManager cacheManager) {
+    public SignupTicketCacheService(AppCacheManager cacheManager) {
         super(cacheManager);
     }
 
