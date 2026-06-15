@@ -22,8 +22,7 @@ public enum ECOMErrorType {
     SEND_TICKET_TIME_LIMIT(HttpStatus.TOO_MANY_REQUESTS, "error.ticket.send.time.limit"),
     TICKET_BLOCKED(HttpStatus.FORBIDDEN, "error.ticket.blocked"),
     TOO_MANY_REQUEST(HttpStatus.TOO_MANY_REQUESTS, "error.too.many.requests"),
-    SMS_SEND_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "error.sms.send.failed"),
-    JSON_CONVERSION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "error.json.conversion");
+    SMS_SEND_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "error.sms.send.failed");
 
     private final HttpStatus httpStatus;
     private final String messageKey;

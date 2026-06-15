@@ -104,9 +104,10 @@ mvn verify -P release   # *UTest (surefire) + *ITest (failsafe)
 
 ## Common Gotchas
 
-- **Redisson is not auto-configured.** `RedissonAutoConfigurationV2` is excluded in
-  `application.yml`. Redis-related beans (`RedisCacheManagerImpl`, `RedissonClient`) are only
-  present when `app.cache.type=redis`. The app starts with no Redis by default.
+- **Redisson is not auto-configured.** `RedissonAutoConfigurationV2` (Spring Boot 2.7+) and
+  `RedissonAutoConfigurationV4` (Spring Boot 4+) are both excluded in `application.yml`.
+  Redis-related beans (`RedisCacheManagerImpl`, `RedissonClient`) are only present when
+  `app.cache.type=redis`. The app starts with no Redis by default.
 - **Flyway `baseline-on-migrate=false`** — do not set `true` in production without a matching
   `baseline-version`.
 - **Config files are `.yml`, not `.properties`.** References to `config/application.properties` in
