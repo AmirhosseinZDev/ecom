@@ -1,6 +1,10 @@
 # Build output — never needed in the build context
 target/
 
+# .m2/repository is intentionally NOT ignored:
+# CI keeps it in the workspace between runs so Maven resolves deps from the
+# local cache instead of downloading from Nexus on every build.
+
 # Version control
 .git/
 .gitignore

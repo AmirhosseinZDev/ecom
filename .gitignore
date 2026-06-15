@@ -4,6 +4,8 @@ logs/
 
 ### Maven ###
 target/
+# Local Maven cache for Docker build — populated by `make docker-build`, excluded from git
+.m2/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
