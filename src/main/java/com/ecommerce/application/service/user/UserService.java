@@ -2,10 +2,11 @@ package com.ecommerce.application.service.user;
 
 import com.ecommerce.application.api.dto.user.*;
 import com.ecommerce.application.api.dto.user.enumeration.Role;
-import com.ecommerce.application.api.exception.*;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
-import com.ecommerce.application.config.properties.dto.TicketProperties;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.SignupProperties;
+import com.ecommerce.application.config.properties.TicketProperties;
 import com.ecommerce.application.config.security.UserDetailsDto;
 import com.ecommerce.application.service.jwt.JwtService;
 import com.ecommerce.application.service.ticket.LoginTicketService;
@@ -44,15 +45,13 @@ public class UserService {
     private final SignupProperties signupProperties;
     private final LoginProperties loginProperties;
 
-    public SendSignupTicketResponseDto sendSignupTicket(SendSignupTicketRequestDto requestDto)
-            throws TicketValidationBlockException {
+    public SendSignupTicketResponseDto sendSignupTicket(SendSignupTicketRequestDto requestDto) {
         signupTicketService.sendTicket(buildTicketRequest(requestDto.getMobileNumber(),
                 signupProperties.getTicket()));
         return new SendSignupTicketResponseDto(signupProperties.getTicket().getTimeToLive().toSeconds());
     }
 
-    public SignupTicketValidationResponseDto validateSignupTicket(SignupTicketValidationRequestDto requestDto)
-            throws TicketValidationBlockException, InvalidTicketException {
+    public SignupTicketValidationResponseDto validateSignupTicket(SignupTicketValidationRequestDto requestDto) {
         String mobileNumber = requestDto.getMobileNumber();
         signupTicketService.validateTicket(mobileNumber, requestDto.getTicket(), mobileNumber);
         String signupToken = UUID.randomUUID().toString();
@@ -61,14 +60,14 @@ public class UserService {
         return new SignupTicketValidationResponseDto(signupToken);
     }
 
-    public void signup(SignupRequestDto requestDto) throws UserHasAlreadyExistException, InvalidSignupTokenException {
+    public void signup(SignupRequestDto requestDto) {
         SignupData signupData = signupCacheService.getSignupData(requestDto.getSignupToken());
         if (signupData == null) {
-            throw new InvalidSignupTokenException("Invalid signup token");
+            throw new EcommerceException(ECOMErrorType.INVALID_SIGNUP_TOKEN);
         }
         Optional<AppUser> existingUser = appUserRepository.findByMobile(signupData.getMobile());
         if (existingUser.isPresent() && Boolean.TRUE.equals(existingUser.get().getIsRegistered())) {
-            throw new UserHasAlreadyExistException("User already exists");
+            throw new EcommerceException(ECOMErrorType.USER_ALREADY_EXISTS);
         }
         AppUser appUser = existingUser.orElse(new AppUser());
         appUser.setFirstName(requestDto.getFirstName());
@@ -98,35 +97,32 @@ public class UserService {
                 Role.valueOf(userDetails.getAuthorities().getFirst().getAuthority()));
     }
 
-    public SendSignupTicketResponseDto sendLoginTicket(SendLoginTicketRequestDto requestDto)
-            throws TicketValidationBlockException, UserNotFoundException {
+    public SendSignupTicketResponseDto sendLoginTicket(SendLoginTicketRequestDto requestDto) {
         appUserRepository.findByMobile(requestDto.getMobileNumber())
                 .filter(u -> Boolean.TRUE.equals(u.getIsRegistered()))
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new EcommerceException(ECOMErrorType.USER_NOT_FOUND));
         loginTicketService.sendTicket(buildTicketRequest(requestDto.getMobileNumber(),
                 loginProperties.getTicket()));
         return new SendSignupTicketResponseDto(loginProperties.getTicket().getTimeToLive().toSeconds());
     }
 
-    public LoginResponseDto validateLoginTicket(ValidateLoginTicketRequestDto requestDto)
-            throws TicketValidationBlockException, InvalidTicketException, UserNotFoundException {
+    public LoginResponseDto validateLoginTicket(ValidateLoginTicketRequestDto requestDto) {
         String mobileNumber = requestDto.getMobileNumber();
         loginTicketService.validateTicket(mobileNumber, requestDto.getTicket(), mobileNumber);
         AppUser appUser = appUserRepository.findByMobile(mobileNumber)
                 .filter(u -> Boolean.TRUE.equals(u.getIsRegistered()))
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new EcommerceException(ECOMErrorType.USER_NOT_FOUND));
         UserDetailsDto userDetails = new UserDetailsDto(appUser);
         return new LoginResponseDto(jwtService.generateToken(userDetails),
                 Role.valueOf(userDetails.getAuthorities().getFirst().getAuthority()));
     }
 
-    public void changePassword(ChangePasswordRequestDto requestDto, Long userId)
-            throws UserNotFoundException, InvalidPasswordException {
+    public void changePassword(ChangePasswordRequestDto requestDto, Long userId) {
         if (!requestDto.getNewPassword().equals(requestDto.getConfirmPassword())) {
-            throw new InvalidPasswordException("New password and confirm password do not match");
+            throw new EcommerceException(ECOMErrorType.INVALID_PASSWORD);
         }
         AppUser appUser = appUserRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new EcommerceException(ECOMErrorType.USER_NOT_FOUND));
         appUser.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
         appUserRepository.save(appUser);
     }

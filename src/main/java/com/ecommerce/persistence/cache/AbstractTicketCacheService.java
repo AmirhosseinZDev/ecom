@@ -1,11 +1,9 @@
 package com.ecommerce.persistence.cache;
 
 import com.ecommerce.persistence.cache.dto.TicketInfoCacheDto;
-import com.tosan.client.redis.api.TedissonCacheManager;
-import com.tosan.client.redis.cacheconfig.CacheConfig;
 
+import java.time.Duration;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Base class for OTP-ticket cache services.
@@ -18,14 +16,10 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractTicketCacheService {
 
-    protected final TedissonCacheManager cacheManager;
+    protected final AppCacheManager cacheManager;
 
-    protected AbstractTicketCacheService(TedissonCacheManager cacheManager) {
+    protected AbstractTicketCacheService(AppCacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setMaxSize(10000);
-        cacheManager.createCache(getTicketCacheName().name(), cacheConfig);
-        cacheManager.createCache(getLastSentCacheName().name(), cacheConfig);
     }
 
     protected abstract CacheName getTicketCacheName();
@@ -33,44 +27,51 @@ public abstract class AbstractTicketCacheService {
     protected abstract CacheName getLastSentCacheName();
 
     public TicketInfoCacheDto getTicketInfoDto(String key) {
-        return cacheManager.getItemFromCache(getTicketCacheName().name(), key);
+        return cacheManager.get(getTicketCacheName().name(), key);
     }
 
     public void addTicket(String key, Long userId, TicketInfoCacheDto ticketInfoCacheDto, Date expirationDate) {
-        cacheManager.addItemToCache(getTicketCacheName().name(), key, ticketInfoCacheDto,
-                getDateDiffInSeconds(expirationDate, new Date()), null, TimeUnit.SECONDS);
+        Duration ttl = getDurationUntil(expirationDate);
+
+        cacheManager.put(getTicketCacheName().name(), key, ticketInfoCacheDto, ttl);
+
         if (userId != null) {
-            cacheManager.addItemToCache(getLastSentCacheName().name(), userId.toString(), ticketInfoCacheDto,
-                    getDateDiffInSeconds(expirationDate, new Date()), null, TimeUnit.SECONDS);
+            cacheManager.put(getLastSentCacheName().name(), userId.toString(), ticketInfoCacheDto, ttl);
         }
     }
 
     public void deleteTicket(String key, Long userId) {
-        cacheManager.removeItemFromCache(getTicketCacheName().name(), key);
+        cacheManager.evict(getTicketCacheName().name(), key);
+
         if (userId != null) {
-            cacheManager.removeItemFromCache(getLastSentCacheName().name(), userId.toString());
+            cacheManager.evict(getLastSentCacheName().name(), userId.toString());
         }
     }
 
     public void setLastSentTicketDate(String key, Date lastSentDate, Date expireDate) {
-        cacheManager.addItemToCache(getLastSentCacheName().name(), key, lastSentDate,
-                getDateDiffInSeconds(lastSentDate, expireDate), null, TimeUnit.SECONDS);
+        Duration ttl = Duration.ofMillis(Math.abs(expireDate.getTime() - lastSentDate.getTime()));
+        cacheManager.put(getLastSentCacheName().name(), key, lastSentDate, ttl);
     }
 
     public Date getLastSentTicketDate(String key) {
-        return cacheManager.getItemFromCache(getLastSentCacheName().name(), key);
+        return cacheManager.get(getLastSentCacheName().name(), key);
     }
 
     public void deleteLastSentTicketDate(String key) {
-        cacheManager.removeItemFromCache(getLastSentCacheName().name(), key);
+        cacheManager.evict(getLastSentCacheName().name(), key);
     }
 
     public void updateTicketInfoDto(String key, TicketInfoCacheDto ticketInfoCacheDto) {
-        cacheManager.replaceCacheItem(getTicketCacheName().name(), key, ticketInfoCacheDto);
+        cacheManager.replace(getTicketCacheName().name(), key, ticketInfoCacheDto);
+    }
+
+    public Duration getDurationUntil(Date expirationDate) {
+        long diffMillis = Math.abs(expirationDate.getTime() - System.currentTimeMillis());
+        return Duration.ofMillis(diffMillis);
     }
 
     public long getDateDiffInSeconds(Date from, Date to) {
-        return getDateDiffInMillis(from, to) / 1000;
+        return Math.abs(to.getTime() - from.getTime()) / 1000;
     }
 
     public long getDateDiffInMillis(Date from, Date to) {

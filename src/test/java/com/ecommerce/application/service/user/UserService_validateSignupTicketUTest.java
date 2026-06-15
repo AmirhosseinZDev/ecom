@@ -2,8 +2,8 @@ package com.ecommerce.application.service.user;
 
 import com.ecommerce.application.api.dto.user.SignupTicketValidationRequestDto;
 import com.ecommerce.application.api.dto.user.SignupTicketValidationResponseDto;
-import com.ecommerce.application.config.properties.dto.LoginProperties;
-import com.ecommerce.application.config.properties.dto.SignupProperties;
+import com.ecommerce.application.config.properties.LoginProperties;
+import com.ecommerce.application.config.properties.SignupProperties;
 import com.ecommerce.application.service.jwt.JwtService;
 import com.ecommerce.application.service.ticket.LoginTicketService;
 import com.ecommerce.application.service.ticket.SignupTicketService;

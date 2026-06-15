@@ -1,7 +1,6 @@
 package com.ecommerce.application.controller.user;
 
 import com.ecommerce.application.api.dto.user.*;
-import com.ecommerce.application.api.exception.*;
 import com.ecommerce.application.config.security.UserDetailsDto;
 import com.ecommerce.application.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,23 +24,20 @@ public class UserController {
 
     @PostMapping(value = "/signup-ticket", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public SendSignupTicketResponseDto sendSignupTicket(@RequestBody SendSignupTicketRequestDto requestDto)
-            throws TicketValidationBlockException {
+    public SendSignupTicketResponseDto sendSignupTicket(@RequestBody SendSignupTicketRequestDto requestDto) {
         return userService.sendSignupTicket(requestDto);
     }
 
     @PostMapping(value = "/signup-ticket/validation", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public SignupTicketValidationResponseDto validateSignupTicket(
-            @RequestBody SignupTicketValidationRequestDto requestDto)
-            throws TicketValidationBlockException, InvalidTicketException {
+            @RequestBody SignupTicketValidationRequestDto requestDto) {
         return userService.validateSignupTicket(requestDto);
     }
 
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void signup(@RequestBody SignupRequestDto requestDto)
-            throws UserHasAlreadyExistException, InvalidSignupTokenException {
+    public void signup(@RequestBody SignupRequestDto requestDto) {
         userService.signup(requestDto);
     }
 
@@ -60,22 +56,19 @@ public class UserController {
 
     @PostMapping(value = "/login-ticket", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public SendSignupTicketResponseDto sendLoginTicket(@RequestBody SendLoginTicketRequestDto requestDto)
-            throws TicketValidationBlockException, UserNotFoundException {
+    public SendSignupTicketResponseDto sendLoginTicket(@RequestBody SendLoginTicketRequestDto requestDto) {
         return userService.sendLoginTicket(requestDto);
     }
 
     @PostMapping(value = "/login-ticket/validation", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public LoginResponseDto validateLoginTicket(@RequestBody ValidateLoginTicketRequestDto requestDto)
-            throws TicketValidationBlockException, InvalidTicketException, UserNotFoundException {
+    public LoginResponseDto validateLoginTicket(@RequestBody ValidateLoginTicketRequestDto requestDto) {
         return userService.validateLoginTicket(requestDto);
     }
 
     @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void changePassword(@RequestBody ChangePasswordRequestDto requestDto, Authentication authentication)
-            throws UserNotFoundException, InvalidPasswordException {
+    public void changePassword(@RequestBody ChangePasswordRequestDto requestDto, Authentication authentication) {
         UserDetailsDto userDetails = (UserDetailsDto) authentication.getPrincipal();
         userService.changePassword(requestDto, userDetails.getId());
     }

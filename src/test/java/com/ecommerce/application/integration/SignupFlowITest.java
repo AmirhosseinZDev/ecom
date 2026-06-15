@@ -99,14 +99,13 @@ class SignupFlowITest extends AbstractIntegrationITest {
     }
 
     // 5 — resend cooldown: a second send for the same mobile inside the TTL window is rejected and
-    // sends no second SMS. The service raises SendTicketTimeLimitNotExceededException (an unmapped
-    // RuntimeException), which the global advice surfaces as 500.
+    // sends no second SMS. The service raises EcommerceException with SEND_TICKET_TIME_LIMIT error type.
     @Test
     void resending_ticket_within_cooldown_is_rejected() throws Exception {
         String mobile = newMobile();
         sendSignupTicket(mobile).andExpect(status().isOk());
 
-        sendSignupTicket(mobile).andExpect(status().is5xxServerError());
+        sendSignupTicket(mobile).andExpect(status().is4xxClientError());
         assertEquals(1, smsRequestCount(), "no second OTP SMS should be sent during the cooldown window");
     }
 
@@ -137,7 +136,7 @@ class SignupFlowITest extends AbstractIntegrationITest {
         sendSignupTicket(mobile).andExpect(status().isOk());
         String signupToken = validateSignupTicket(mobile, captureLastOtp());
 
-        signup(signupToken).andExpect(status().isBadRequest());
+        signup(signupToken).andExpect(status().isConflict());
 
         assertEquals(1, countUsers(mobile), "the duplicate signup must not create a second row");
     }

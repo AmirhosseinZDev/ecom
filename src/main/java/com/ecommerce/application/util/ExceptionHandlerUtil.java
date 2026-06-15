@@ -1,11 +1,12 @@
 package com.ecommerce.application.util;
 
 import com.ecommerce.application.advice.ExceptionParam;
+import com.ecommerce.application.api.exception.ECOMErrorType;
 import com.ecommerce.application.api.exception.EcommerceException;
-import com.ecommerce.application.api.exception.EcommerceServiceException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,53 +19,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExceptionHandlerUtil {
 
-    private final ObjectMapper objectMapper;
+    private final MessageSource messageSource;
 
     public ExceptionParam generateExceptionParam(Throwable exception) {
-        Map<String, Object> exceptionParams;
         if (exception instanceof EcommerceException e) {
-            exceptionParams = convertToExceptionParam(exception);
-            return generateExceptionParam(e.getMessage(), e.getErrorCode(), exceptionParams);
-        } else if (exception instanceof EcommerceServiceException e) {
-            exceptionParams = convertToExceptionParam(exception);
-            return generateExceptionParam(e.getMessage(), e.getErrorCode(), exceptionParams);
+            return buildParam(e.getEcomErrorType(), e.getData());
         }
-        return handleThrowable(exception);
+        return buildParam(ECOMErrorType.GENERAL_ERROR, null);
     }
 
-    public <T> Map<String, Object> convertToExceptionParam(T object) {
-        return jsonToMap(objectToJsonForRestException(object));
+    private ExceptionParam buildParam(ECOMErrorType errorType, Map<String, Object> data) {
+        var param = new ExceptionParam();
+        param.setErrorCode(errorType.name());
+        param.setMessage(resolveMessage(errorType));
+        param.setErrorParams(data);
+        return param;
     }
 
-    private Map<String, Object> jsonToMap(String jsonString) {
+    private String resolveMessage(ECOMErrorType errorType) {
         try {
-            TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
-            };
-            return objectMapper.readValue(jsonString, typeRef);
-        } catch (Exception e) {
-            throw new EcommerceServiceException("error in converting Json to map JSONObject", e);
+            return messageSource.getMessage(errorType.getMessageKey(), null, LocaleContextHolder.getLocale());
+        } catch (NoSuchMessageException e) {
+            return errorType.getMessageKey();
         }
-    }
-
-    private <T> String objectToJsonForRestException(T object) {
-        try {
-            return objectMapper.writer().writeValueAsString(object);
-        } catch (Exception e) {
-            throw new EcommerceServiceException("error in converting object to Json", e);
-        }
-    }
-
-    private ExceptionParam handleThrowable(Throwable throwable) {
-        EcommerceServiceException serviceException = new EcommerceServiceException(throwable.getMessage());
-        return generateExceptionParam(serviceException.getMessage(), serviceException.getErrorCode(),
-                null);
-    }
-
-    private ExceptionParam generateExceptionParam(String message, String errorCode, Map<String, Object> errorParams) {
-        ExceptionParam exceptionParam = new ExceptionParam();
-        exceptionParam.setMessage(message);
-        exceptionParam.setErrorCode(errorCode);
-        exceptionParam.setErrorParams(errorParams);
-        return exceptionParam;
     }
 }

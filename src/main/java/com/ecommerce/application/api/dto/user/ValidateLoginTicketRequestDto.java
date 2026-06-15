@@ -1,7 +1,7 @@
 package com.ecommerce.application.api.dto.user;
 
-import com.tosan.validation.constraints.MobileNumber;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ValidateLoginTicketRequestDto {
 
     @NotEmpty
-    @MobileNumber
+    @Pattern(regexp = "^09[0-9]{9}$", message = "Invalid mobile number format")
     private String mobileNumber;
 
     @NotEmpty

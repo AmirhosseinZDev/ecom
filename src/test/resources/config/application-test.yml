@@ -1,0 +1,32 @@
+# Integration-test overrides (active profile: "test").
+#
+# Loaded automatically by Spring Boot on top of config/application.yml.
+#
+# - Datasource points at a Testcontainers-managed PostgreSQL container created
+#   on first JDBC connection and kept alive for the whole JVM via TC_DAEMON=true.
+#   Flyway runs the real migrations against it once.
+# - The SMS provider base URL points at the in-process WireMock server.
+# - Redis stays disabled; the bundled Caffeine cache is used instead.
+
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:15-alpine:///ecom?TC_DAEMON=true
+    username: test
+    password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+# External SMS provider → local WireMock (port must match AbstractIntegrationITest.WIREMOCK_PORT).
+app:
+  sms:
+    base-url: http://localhost:9576
+    api-key: test-api-key
+  # In-memory Caffeine cache instead of Redis.
+  cache:
+    type: caffeine

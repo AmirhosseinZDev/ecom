@@ -1,0 +1,25 @@
+# Build output — never needed in the build context
+target/
+
+# .m2/repository is intentionally NOT ignored:
+# CI keeps it in the workspace between runs so Maven resolves deps from the
+# local cache instead of downloading from Nexus on every build.
+
+# Version control
+.git/
+.gitignore
+
+# IDE files
+.idea/
+*.iml
+*.class
+
+# Logs
+logs/
+
+# Documentation (not needed to build the image)
+docs/
+*.md
+
+# Local config overrides that must not leak into the image
+src/main/resources/config/application-dev.yml

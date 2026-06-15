@@ -1,6 +1,5 @@
 package com.ecommerce.persistence.cache;
 
-import com.tosan.client.redis.api.TedissonCacheManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +16,7 @@ import static org.mockito.Mockito.when;
 class SignupTicketCacheService_getLastSentTicketDateUTest {
 
     @Mock
-    private TedissonCacheManager cacheManager;
+    private AppCacheManager cacheManager;
 
     @InjectMocks
     private SignupTicketCacheService signupTicketCacheService;
@@ -25,12 +24,12 @@ class SignupTicketCacheService_getLastSentTicketDateUTest {
     @Test
     void last_sent_ticket_date_is_read_from_signup_last_ticket_cache() {
         Date lastSentDate = new Date();
-        when(cacheManager.getItemFromCache(CacheName.SIGNUP_LAST_TICKET.name(), "last-sent-key"))
+        when(cacheManager.get(CacheName.SIGNUP_LAST_TICKET.name(), "last-sent-key"))
                 .thenReturn(lastSentDate);
 
         Date result = signupTicketCacheService.getLastSentTicketDate("last-sent-key");
 
         assertSame(lastSentDate, result);
-        verify(cacheManager).getItemFromCache(CacheName.SIGNUP_LAST_TICKET.name(), "last-sent-key");
+        verify(cacheManager).get(CacheName.SIGNUP_LAST_TICKET.name(), "last-sent-key");
     }
 }

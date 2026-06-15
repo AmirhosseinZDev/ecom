@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.tosan.validation.Validation;
-import com.tosan.validation.core.ValidatorBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -20,9 +19,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Amirhossein Zamanzade
@@ -30,6 +26,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
+@EnableCaching
 public class EcommerceConfiguration implements WebMvcConfigurer {
 
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
@@ -38,15 +35,8 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
     @Bean("devPropertySourcesPlaceholderConfigurer")
     @Profile("dev")
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(ResourceUtil resourceUtil) {
-        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-dev.properties",
-                "config/application-dev.properties");
-    }
-
-    @Bean("testPropertySourcesPlaceholderConfigurer")
-    @Profile("test")
-    public PropertySourcesPlaceholderConfigurer testPropertySourcesPlaceholderConfigurer(ResourceUtil resourceUtil) {
-        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-test.properties",
-                "config/application-test.properties");
+        return generatePlaceHolderConfigurer(resourceUtil, "/config/application-dev.yml",
+                "config/application-dev.yml");
     }
 
     @Bean("propertySourcesPlaceholderConfigurer")
@@ -66,15 +56,6 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
                 .build();
     }
 
-    @Bean
-    @Primary
-    public Validation yekanValidation() {
-        Validation validation = new Validation(new ValidatorBuilder(), new HashMap<>());
-        validation.setIgnoredParameters(new ArrayList<>());
-        validation.setSemiIgnoredParameters(getSemiIgnoredParameters());
-        return validation;
-    }
-
     private EcommercePlaceHolderConfigurer generatePlaceHolderConfigurer(ResourceUtil resourceUtil, String classpath,
             String fileSystemPath) {
         EcommercePlaceHolderConfigurer placeholderConfigurer = new EcommercePlaceHolderConfigurer(resourceUtil);
@@ -88,21 +69,15 @@ public class EcommerceConfiguration implements WebMvcConfigurer {
     private Resource[] getResources(String classpath, String fileSystemPath) {
         if (classpath != null && fileSystemPath != null) {
             return new Resource[]{
-                    new ClassPathResource("/config/application.properties"),
+                    new ClassPathResource("/config/application.yml"),
                     new ClassPathResource(classpath),
-                    new FileSystemResource(fileSystemPath),
-                    new ClassPathResource("/config/application.yml")
+                    new FileSystemResource(fileSystemPath)
             };
         } else {
             return new Resource[]{
-                    new ClassPathResource("/config/application.properties"),
-                    new FileSystemResource("config/application.properties"),
-                    new ClassPathResource("/config/application.yml")
+                    new ClassPathResource("/config/application.yml"),
+                    new FileSystemResource("config/application.properties")
             };
         }
-    }
-
-    private List<String> getSemiIgnoredParameters() {
-        return List.of();
     }
 }

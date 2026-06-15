@@ -1,9 +1,8 @@
 package com.ecommerce.application.service.ticket;
 
 
-import com.ecommerce.application.api.exception.InvalidTicketException;
-import com.ecommerce.application.api.exception.SendTicketTimeLimitNotExceededException;
-import com.ecommerce.application.api.exception.TicketValidationBlockException;
+import com.ecommerce.application.api.exception.ECOMErrorType;
+import com.ecommerce.application.api.exception.EcommerceException;
 import com.ecommerce.application.invoker.sms.SmsService;
 import com.ecommerce.application.service.ticket.dto.TicketGenerateRequestDto;
 import com.ecommerce.application.util.DateUtil;
@@ -39,12 +38,11 @@ public abstract class AbstractTicketService {
 
     protected abstract int getTicketLength(TicketGenerateRequestDto ticketGenerateRequestDto);
 
-    public void validateTicket(String cacheKey, String ticket, String mobileNumber) throws
-            TicketValidationBlockException, InvalidTicketException {
+    public void validateTicket(String cacheKey, String ticket, String mobileNumber) {
         TicketInfoCacheDto result = ticketCacheService.getTicketInfoDto(cacheKey);
         if (result == null || result.getTicket() == null || !result.getTicket().equals(ticket)) {
             handleFailureCount(result, cacheKey, mobileNumber);
-            throw new InvalidTicketException("Ticket is not valid");
+            throw new EcommerceException(ECOMErrorType.INVALID_TICKET);
         }
     }
 
@@ -56,15 +54,13 @@ public abstract class AbstractTicketService {
         ticketCacheService.deleteLastSentTicketDate(cacheKey);
     }
 
-    protected String prepareTicket(TicketGenerateRequestDto ticketGenerateRequestDto) throws
-            SendTicketTimeLimitNotExceededException, TicketValidationBlockException {
+    protected String prepareTicket(TicketGenerateRequestDto ticketGenerateRequestDto) {
         if (ticketCacheService.getTicketInfoDto(ticketGenerateRequestDto.getCacheKey()) != null) {
-            throw new SendTicketTimeLimitNotExceededException(
-                    "Request is not permitted, because previous ticket is not expired yet.");
+            throw new EcommerceException(ECOMErrorType.SEND_TICKET_TIME_LIMIT);
         }
         if (blockedMobileNumbersCacheService.isMobileNumberExistInBlockedMobileNumbers(ticketGenerateRequestDto
                 .getMobileNumber())) {
-            throw new TicketValidationBlockException("This mobile number has been blocked.");
+            throw new EcommerceException(ECOMErrorType.TICKET_BLOCKED);
         }
         Date currentDate = new Date();
         long ticketTimeToLiveInMillis = (long) ticketGenerateRequestDto.getTicketTimeToLive() * 1000;
@@ -72,8 +68,7 @@ public abstract class AbstractTicketService {
                 ticketGenerateRequestDto.getLastSentCacheKey());
         if (lastSentTicketDate != null && dateUtil.getDateDiffInMillis(lastSentTicketDate,
                 currentDate) < ticketTimeToLiveInMillis) {
-            throw new SendTicketTimeLimitNotExceededException(
-                    "Send ticket time limit for this mobile number is not exceeded yet.");
+            throw new EcommerceException(ECOMErrorType.SEND_TICKET_TIME_LIMIT);
         }
         Date expireDate = new Date(currentDate.getTime() + ticketTimeToLiveInMillis);
         String ticket = generateTicket(getTicketLength(ticketGenerateRequestDto));
@@ -102,14 +97,13 @@ public abstract class AbstractTicketService {
         return String.format("%0" + ticketLength + "d", SECURE_RANDOM.nextInt(bound));
     }
 
-    private void handleFailureCount(TicketInfoCacheDto result, String ticketCacheKey, String mobileNumber)
-            throws TicketValidationBlockException {
+    private void handleFailureCount(TicketInfoCacheDto result, String ticketCacheKey, String mobileNumber) {
         if (result != null) {
             int failureCount = result.incrementAndGetFailureCount();
             if (failureCount >= getMaxFailureCount()) {
                 deleteTicket(ticketCacheKey, null);
                 blockedMobileNumbersCacheService.addMobileNumber(mobileNumber, getBlockDuration().toSeconds());
-                throw new TicketValidationBlockException("This mobile number is blocked.");
+                throw new EcommerceException(ECOMErrorType.TICKET_BLOCKED);
             }
             ticketCacheService.updateTicketInfoDto(ticketCacheKey, result);
         }

@@ -1,9 +1,9 @@
 package com.ecommerce.application;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableConfigurationProperties
 public class EcommerceApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         if (new FileSystemResource("config/logback.xml").getFile().exists()) {
             System.setProperty("logging.config", "file:config/logback.xml");
         } else {
@@ -26,4 +26,3 @@ public class EcommerceApplication {
         new SpringApplicationBuilder(EcommerceApplication.class).run(args);
     }
 }
-
