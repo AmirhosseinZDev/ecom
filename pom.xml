@@ -201,11 +201,6 @@
                 <version>${hibernate.version}</version>
                 <executions>
                     <execution>
-                        <configuration>
-                            <enableLazyInitialization>true</enableLazyInitialization>
-                            <enableDirtyTracking>true</enableDirtyTracking>
-                            <enableAssociationManagement>false</enableAssociationManagement>
-                        </configuration>
                         <goals>
                             <goal>enhance</goal>
                         </goals>
