@@ -1,0 +1,80 @@
+name: CI
+
+# Build + full test suite on every push to main and every pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel an in-progress run when a newer commit is pushed to the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & test
+    runs-on: ubuntu-latest   # ships a Docker daemon, which Testcontainers (*ITest) needs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven          # caches ~/.m2 keyed on pom.xml
+
+      # `-P release` enables the *UTest tier (surefire); `verify` runs the *ITest
+      # tier (failsafe), which boots Testcontainers PostgreSQL + in-process WireMock.
+      - name: Build, unit tests and integration tests
+        run: mvn -B --no-transfer-progress -P release verify
+
+      # The runnable Spring Boot jar, downloadable from the run's Artifacts section.
+      - name: Upload Boot jar
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecommerce-jar
+          path: target/*.jar
+          if-no-files-found: error
+          retention-days: 14
+
+      # Surefire + failsafe reports, kept even when the build fails, for debugging.
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            target/surefire-reports/
+            target/failsafe-reports/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  docker-build:
+    name: Docker image build
+    runs-on: ubuntu-latest
+    needs: build-and-test   # only build the image once the jar + tests are green
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Validates the multi-stage Dockerfile (Temurin 25 build + JRE 25 runtime).
+      # Build only — publishing happens in the Release workflow on a version tag.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ecommerce:ci-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
