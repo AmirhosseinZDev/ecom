@@ -36,7 +36,7 @@ jobs:
       # The runnable Spring Boot jar, downloadable from the run's Artifacts section.
       - name: Upload Boot jar
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ecommerce-jar
           path: target/*.jar
@@ -46,7 +46,7 @@ jobs:
       # Surefire + failsafe reports, kept even when the build fails, for debugging.
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-reports
           path: |
