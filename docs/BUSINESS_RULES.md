@@ -116,6 +116,37 @@ CacheName enum
 
 ---
 
+## Shopping Cart (authenticated)
+
+Every user has at most **one** cart (`cart.user_id` is unique); it is created lazily the first time
+the user adds a product. A cart holds one line per product (`cart_item`, unique on
+`(cart_id, product_id)`) with an integer `quantity`. The acting user is always taken from the JWT
+principal — a user can only ever read or mutate their own cart.
+
+| Method & path                          | Effect                                                           |
+|----------------------------------------|------------------------------------------------------------------|
+| `GET /cart`                            | Return the current cart (empty cart if none exists yet).         |
+| `POST /cart/items`                     | Add `productId` (`quantity` defaults to 1); merges into the existing line if already present. |
+| `PUT /cart/items/{productId}`          | Set the line quantity to an absolute value.                      |
+| `POST /cart/items/{productId}/increment` | Increase the line quantity by 1.                               |
+| `POST /cart/items/{productId}/decrement` | Decrease the line quantity by 1; the line is removed when it reaches 0. |
+| `DELETE /cart/items/{productId}`       | Remove the product line.                                         |
+| `DELETE /cart`                         | Clear all lines.                                                 |
+
+Every response is the full cart: `items[]` (each with the product's `code`/`name`/`localName`,
+`quantity`, `unitPrice`, `lineTotal`), plus `totalQuantity` and `totalPrice`. `unitPrice` is the
+product's first price, preferring `discountPrice` when present.
+
+**Guards** (all raise the standard error body):
+
+- `PRODUCT_NOT_FOUND` — the product id does not exist.
+- `PRODUCT_NOT_PURCHASABLE` (409) — the product is `INACTIVE` or `OUT_OF_STOCK`.
+- `INSUFFICIENT_INVENTORY` (409) — the resulting quantity would exceed `product.inventory_count`.
+- `CART_ITEM_NOT_FOUND` (404) — updating/incrementing/removing a product that is not in the cart
+  (also returned when the cart itself does not exist yet).
+
+---
+
 ## Error Response Contract
 
 All errors return a JSON body:

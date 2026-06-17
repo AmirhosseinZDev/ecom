@@ -28,7 +28,10 @@ public enum ECOMErrorType {
     PRODUCT_URL_ALREADY_EXISTS(HttpStatus.CONFLICT, "error.product.url.already.exists"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "error.category.not.found"),
     BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "error.brand.not.found"),
-    MEDIA_NOT_FOUND(HttpStatus.NOT_FOUND, "error.media.not.found");
+    MEDIA_NOT_FOUND(HttpStatus.NOT_FOUND, "error.media.not.found"),
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "error.cart.item.not.found"),
+    PRODUCT_NOT_PURCHASABLE(HttpStatus.CONFLICT, "error.product.not.purchasable"),
+    INSUFFICIENT_INVENTORY(HttpStatus.CONFLICT, "error.product.insufficient.inventory");
 
     private final HttpStatus httpStatus;
     private final String messageKey;
