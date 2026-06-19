@@ -9,5 +9,5 @@ public class ProductImageDto {
 
     private String altText;
 
-    private Long mediaId;
+    private String imageData;
 }

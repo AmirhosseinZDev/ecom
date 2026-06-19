@@ -2,6 +2,7 @@ package com.ecommerce.application.api.dto.product;
 
 import com.ecommerce.persistence.entity.enumeration.InventoryStatus;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
+import com.ecommerce.persistence.entity.enumeration.SpecificationKey;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,9 +16,6 @@ import java.util.Map;
 @Getter
 @Setter
 public class ProductRequestDto {
-
-    @NotEmpty
-    private String code;
 
     @NotNull
     private Long categoryId;
@@ -35,10 +33,7 @@ public class ProductRequestDto {
 
     private String fullDescription;
 
-    private Map<String, String> specification;
-
-    @Valid
-    private ProductImageDto image;
+    private Map<SpecificationKey, String> specification;
 
     @NotEmpty
     private String name;

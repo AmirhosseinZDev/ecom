@@ -3,6 +3,9 @@ package com.ecommerce.persistence.entity;
 import com.ecommerce.persistence.entity.enumeration.InventoryStatus;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
 import com.ecommerce.persistence.entity.enumeration.SpecificationKey;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -14,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -81,10 +85,14 @@ public class Product {
     private Map<SpecificationKey, String> specification = new HashMap<>();
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "altText", column = @Column(name = "main_image_alt_text", length = 255)),
+            @AttributeOverride(name = "imageData", column = @Column(name = "main_image_data", columnDefinition = "TEXT"))
+    })
     private ProductImage mainImage;
 
-    @Embedded
-    private ProductImage otherImages;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductOtherImage> otherImages = new ArrayList<>();
 
     @Column(name = "brand_id")
     private Long brandId;

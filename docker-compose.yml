@@ -29,31 +29,31 @@ services:
     volumes:
       - redis_data:/data
 
-#  ecom:
-#    build:
-#      context: .
-#      target: runtime
-#    container_name: ecommerce
-#    restart: unless-stopped
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
-#      SPRING_DATASOURCE_USERNAME: ecom
-#      SPRING_DATASOURCE_PASSWORD: ECOM
-#      # Switch to redis to use the Redis cache backend
-#      APP_CACHE_TYPE: caffeine
-#      # Override the JWT secret at runtime — do not rely on the committed default
-#      SECURITY_JWT_SECRET_KEY: ${JWT_SECRET_KEY:-Y2hhbmdlLW1lLWNoYW5nZS1tZS1jaGFuZ2UtbWUtY2hhbmdlLW1lLWNoYW5nZS1tZS1jaGFuZ2UtbWU=}
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#    healthcheck:
-#      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
-#      interval: 30s
-#      timeout: 5s
-#      start_period: 90s
-#      retries: 3
+  ecom:
+    build:
+      context: .
+      target: runtime
+    container_name: ecommerce
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
+      SPRING_DATASOURCE_USERNAME: ecom
+      SPRING_DATASOURCE_PASSWORD: ECOM
+      # Switch to redis to use the Redis cache backend
+      APP_CACHE_TYPE: caffeine
+      # Override the JWT secret at runtime — do not rely on the committed default
+      SECURITY_JWT_SECRET_KEY: ${JWT_SECRET_KEY:-Y2hhbmdlLW1lLWNoYW5nZS1tZS1jaGFuZ2UtbWUtY2hhbmdlLW1lLWNoYW5nZS1tZS1jaGFuZ2UtbWU=}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
 
 volumes:
   postgres_data:

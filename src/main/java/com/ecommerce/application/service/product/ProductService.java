@@ -2,39 +2,59 @@ package com.ecommerce.application.service.product;
 
 import com.ecommerce.application.api.dto.product.ProductRequestDto;
 import com.ecommerce.application.api.dto.product.ProductResponseDto;
+import com.ecommerce.application.api.dto.product.ProductSearchRequestDto;
 import com.ecommerce.application.api.exception.ECOMErrorType;
 import com.ecommerce.application.api.exception.EcommerceException;
+import com.ecommerce.application.api.dto.product.enumeration.ImageType;
 import com.ecommerce.persistence.entity.Product;
-import com.ecommerce.persistence.entity.enumeration.ProductStatus;
+import com.ecommerce.persistence.entity.ProductImage;
+import com.ecommerce.persistence.entity.ProductOtherImage;
 import com.ecommerce.persistence.repository.BrandRepository;
 import com.ecommerce.persistence.repository.CategoryRepository;
-import com.ecommerce.persistence.repository.MediaRepository;
 import com.ecommerce.persistence.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Base64;
 
 /**
  * @author reza gholamzad
  * @since 6/16/26
  */
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
-    private final MediaRepository mediaRepository;
     private final ProductMapper productMapper;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ProductResponseDto create(ProductRequestDto requestDto) {
-        validateCode(requestDto.getCode(), null);
-        validateUrl(requestDto.getUrl(), null);
-        validateReferences(requestDto);
-        Product product = new Product();
+    public ProductResponseDto create(ProductRequestDto requestDto, MultipartFile mainImageFile, String altText) {
+
+        validateUrlForCreate(requestDto.getUrl());
+
+        validateProductRequestDto(requestDto);
+
+        var product = new Product();
         productMapper.apply(requestDto, product);
+        product.setCode(generateCode(requestDto.getCategoryId()));
+
+        if (mainImageFile != null) {
+            var image = new ProductImage();
+            image.setAltText(altText);
+            image.setImageData(toBase64(mainImageFile));
+            product.setMainImage(image);
+        }
+
         return productMapper.toResponseDto(productRepository.save(product));
     }
 
@@ -42,22 +62,81 @@ public class ProductService {
         return productMapper.toResponseDto(findProductOrThrow(id));
     }
 
-    public Page<ProductResponseDto> list(Long categoryId, Long brandId, ProductStatus status, Pageable pageable) {
-        return productRepository.findAll(ProductSpecifications.build(categoryId, brandId, status), pageable)
+    public Page<ProductResponseDto> search(ProductSearchRequestDto searchDto, Pageable pageable) {
+        return productRepository.findAll(ProductSpecifications.build(searchDto), pageable)
                 .map(productMapper::toResponseDto);
     }
 
     public ProductResponseDto update(Long id, ProductRequestDto requestDto) {
-        Product product = findProductOrThrow(id);
-        validateCode(requestDto.getCode(), id);
-        validateUrl(requestDto.getUrl(), id);
-        validateReferences(requestDto);
+
+        var product = findProductOrThrow(id);
+
+        validateUrlForUpdate(requestDto.getUrl(), id);
+
+        validateProductRequestDto(requestDto);
+
         productMapper.apply(requestDto, product);
+
         return productMapper.toResponseDto(productRepository.save(product));
+    }
+
+    public ProductResponseDto uploadImage(Long productId, ImageType type, MultipartFile file, String altText) {
+
+        var product = findProductOrThrow(productId);
+
+        if (type == ImageType.MAIN) {
+            var image = new ProductImage();
+            image.setAltText(altText);
+            image.setImageData(toBase64(file));
+            product.setMainImage(image);
+        } else {
+            var image = new ProductOtherImage();
+            image.setProduct(product);
+            image.setAltText(altText);
+            image.setImageData(toBase64(file));
+            product.getOtherImages().add(image);
+        }
+
+        return productMapper.toResponseDto(productRepository.save(product));
+    }
+
+    public void removeImage(Long productId, ImageType type, Long imageId) {
+        var product = findProductOrThrow(productId);
+        if (type == ImageType.MAIN) {
+            product.setMainImage(null);
+        } else {
+            product.getOtherImages().removeIf(img -> img.getId().equals(imageId));
+        }
+        productRepository.save(product);
     }
 
     public void delete(Long id) {
         productRepository.delete(findProductOrThrow(id));
+    }
+
+    private String generateCode(Long categoryId) {
+        Long seq = jdbcTemplate.queryForObject("SELECT NEXTVAL('product_code_seq')", Long.class);
+        return categoryId + "-" + seq;
+    }
+
+    private String toBase64(MultipartFile file) {
+        try {
+            return Base64.getEncoder().encodeToString(file.getBytes());
+        } catch (IOException e) {
+            throw new EcommerceException(ECOMErrorType.FILE_UPLOAD_FAILED);
+        }
+    }
+
+    private void validateUrlForCreate(String url) {
+        if (productRepository.existsByUrl(url)) {
+            throw new EcommerceException(ECOMErrorType.PRODUCT_URL_ALREADY_EXISTS);
+        }
+    }
+
+    private void validateUrlForUpdate(String url, Long id) {
+        if (productRepository.existsByUrlAndIdNot(url, id)) {
+            throw new EcommerceException(ECOMErrorType.PRODUCT_URL_ALREADY_EXISTS);
+        }
     }
 
     private Product findProductOrThrow(Long id) {
@@ -65,25 +144,7 @@ public class ProductService {
                 .orElseThrow(() -> new EcommerceException(ECOMErrorType.PRODUCT_NOT_FOUND));
     }
 
-    private void validateCode(String code, Long excludeId) {
-        boolean exists = excludeId == null
-                ? productRepository.findByCode(code).isPresent()
-                : productRepository.existsByCodeAndIdNot(code, excludeId);
-        if (exists) {
-            throw new EcommerceException(ECOMErrorType.PRODUCT_CODE_ALREADY_EXISTS);
-        }
-    }
-
-    private void validateUrl(String url, Long excludeId) {
-        boolean exists = excludeId == null
-                ? productRepository.findByUrl(url).isPresent()
-                : productRepository.existsByUrlAndIdNot(url, excludeId);
-        if (exists) {
-            throw new EcommerceException(ECOMErrorType.PRODUCT_URL_ALREADY_EXISTS);
-        }
-    }
-
-    private void validateReferences(ProductRequestDto requestDto) {
+    private void validateProductRequestDto(ProductRequestDto requestDto) {
         if (!categoryRepository.existsById(requestDto.getCategoryId())) {
             throw new EcommerceException(ECOMErrorType.CATEGORY_NOT_FOUND);
         }
@@ -92,10 +153,6 @@ public class ProductService {
         }
         if (requestDto.getBrandId() != null && !brandRepository.existsById(requestDto.getBrandId())) {
             throw new EcommerceException(ECOMErrorType.BRAND_NOT_FOUND);
-        }
-        Long mediaId = requestDto.getImage() != null ? requestDto.getImage().getMediaId() : null;
-        if (mediaId != null && !mediaRepository.existsById(mediaId)) {
-            throw new EcommerceException(ECOMErrorType.MEDIA_NOT_FOUND);
         }
     }
 }

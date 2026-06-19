@@ -1,13 +1,13 @@
-package com.ecommerce.persistence.entity;
+package com.ecommerce.application.api.dto.product;
 
-import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
-@Embeddable
 @Getter
 @Setter
-public class ProductImage {
+public class ProductOtherImageDto {
+
+    private Long id;
 
     private String altText;
 

@@ -7,7 +7,7 @@ ARG MAVEN_OPTS
 
 RUN mvn clean package -Dmaven.test.skip=true
 
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:25-jre-alpine AS runtime
 
 ENV TZ=Asia/Tehran
 

@@ -2,6 +2,7 @@ package com.ecommerce.application.api.dto.product;
 
 import com.ecommerce.persistence.entity.enumeration.InventoryStatus;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
+import com.ecommerce.persistence.entity.enumeration.SpecificationKey;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,9 +30,11 @@ public class ProductResponseDto {
 
     private String fullDescription;
 
-    private Map<String, String> specification;
+    private Map<SpecificationKey, String> specification;
 
-    private ProductImageDto image;
+    private ProductImageDto mainImage;
+
+    private List<ProductOtherImageDto> otherImages;
 
     private String name;
 
