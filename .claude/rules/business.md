@@ -89,7 +89,7 @@ DELETE /cart                            ← clear all lines
 ```
 
 - All cart endpoints require a JWT (any role); they are **not** in `PUBLIC_ENDPOINTS`. The acting user is taken from the JWT principal (`UserDetailsDto.getId()`), never from the request body — a user can only touch their own cart.
-- **One cart per user** (`uk_cart_user`). `GET /cart` lazily creates the cart; mutating an item when no cart exists returns `CART_ITEM_NOT_FOUND`.
+- **One cart per user** (`uk_cart_user`). `GET /cart` and `DELETE /cart` lazily create the cart (cart creation is race-safe — concurrent first-access falls back to a re-read); mutating a specific item (`PATCH`/increment/decrement/`DELETE /cart/items/{id}`) when no cart exists returns `CART_ITEM_NOT_FOUND`. Clearing a non-existent cart is a no-op that returns an empty cart.
 - **A line is keyed by `(cart, productId, variantType)`** (`uk_cart_item_product_variant`). The same product in a different variant is a separate line. Re-adding the same product+variant **merges** into the existing line (quantities sum).
 - **`variantType` must be one the product actually offers** — it must match a `Price.variantType` on the product, else `PRODUCT_VARIANT_NOT_FOUND`.
 - **Stock is validated against `Product.inventoryCount`** (single product-level count; the catalog has no per-variant inventory). Add / increment / set-quantity that would push a line above `inventoryCount` returns `INSUFFICIENT_STOCK`. Only `ACTIVE` products are purchasable, else `PRODUCT_NOT_AVAILABLE`.

@@ -26,7 +26,7 @@ class CartService_addItemUTest extends BaseCartServiceUTest {
         Product product = product(PRODUCT_ID, 10, ProductStatus.ACTIVE, VariantType.COLOR,
                 BigDecimal.valueOf(100), BigDecimal.valueOf(80));
         when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
-        when(cartRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
+        stubLazyCreatedCart();
         stubProductsForDto(product);
 
         CartResponseDto response = cartService.addItem(USER_ID, addRequest(PRODUCT_ID, VariantType.COLOR, 2));
@@ -116,7 +116,7 @@ class CartService_addItemUTest extends BaseCartServiceUTest {
     void requesting_more_than_inventory_throws_insufficient_stock() {
         Product product = product(PRODUCT_ID, 3);
         when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
-        when(cartRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
+        stubLazyCreatedCart();
 
         EcommerceException exception = assertThrows(EcommerceException.class,
                 () -> cartService.addItem(USER_ID, addRequest(PRODUCT_ID, VariantType.COLOR, 4)));

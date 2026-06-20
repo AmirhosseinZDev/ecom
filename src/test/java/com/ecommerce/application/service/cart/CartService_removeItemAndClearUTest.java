@@ -58,12 +58,12 @@ class CartService_removeItemAndClearUTest extends BaseCartServiceUTest {
     }
 
     @Test
-    void clear_without_cart_throws_cart_item_not_found() {
-        when(cartRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
+    void clear_without_cart_is_a_no_op_returning_empty_cart() {
+        stubLazyCreatedCart();
 
-        EcommerceException exception = assertThrows(EcommerceException.class,
-                () -> cartService.clearCart(USER_ID));
+        CartResponseDto response = cartService.clearCart(USER_ID);
 
-        assertEquals(ECOMErrorType.CART_ITEM_NOT_FOUND, exception.getEcomErrorType());
+        assertTrue(response.getItems().isEmpty());
+        assertEquals(0, response.getTotalQuantity());
     }
 }

@@ -29,6 +29,14 @@ class CartRemoveAndClearITest extends AbstractCartITest {
     }
 
     @Test
+    void clear_on_a_user_without_a_cart_is_a_no_op() throws Exception {
+        clearCart(userToken)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items", hasSize(0)))
+                .andExpect(jsonPath("$.totalQuantity").value(0));
+    }
+
+    @Test
     void clear_empties_the_cart() throws Exception {
         Long productId = createActiveProduct("clear", 10, VariantType.COLOR, VariantType.SIZE);
         addItemAndGetId(userToken, productId, VariantType.COLOR, 2);

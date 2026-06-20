@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,13 +33,13 @@ class CartService_getCartUTest extends BaseCartServiceUTest {
 
     @Test
     void get_creates_empty_cart_when_none_exists() {
-        when(cartRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
+        stubLazyCreatedCart();
 
         CartResponseDto response = cartService.getCart(USER_ID);
 
         assertTrue(response.getItems().isEmpty());
         assertEquals(0, response.getTotalQuantity());
         assertEquals(USER_ID, response.getUserId());
-        verify(cartRepository).save(any(Cart.class));
+        verify(cartFactory).createNew(USER_ID);
     }
 }

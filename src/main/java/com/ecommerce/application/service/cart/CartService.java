@@ -13,11 +13,13 @@ import com.ecommerce.persistence.entity.enumeration.VariantType;
 import com.ecommerce.persistence.repository.CartRepository;
 import com.ecommerce.persistence.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final CartMapper cartMapper;
+    private final CartFactory cartFactory;
 
     @Transactional
     public CartResponseDto getCart(Long userId) {
@@ -106,17 +109,24 @@ public class CartService {
 
     @Transactional
     public CartResponseDto clearCart(Long userId) {
-        Cart cart = getCartOrThrow(userId);
+        // Clearing is idempotent: a missing cart is treated as already-empty rather than 404.
+        Cart cart = getOrCreateCart(userId);
         cart.getItems().clear();
         return toDto(cartRepository.save(cart));
     }
 
     private Cart getOrCreateCart(Long userId) {
-        return cartRepository.findByUserId(userId).orElseGet(() -> {
-            Cart cart = new Cart();
-            cart.setUserId(userId);
-            return cartRepository.save(cart);
-        });
+        Optional<Cart> existing = cartRepository.findByUserId(userId);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+        try {
+            return cartFactory.createNew(userId);
+        } catch (DataIntegrityViolationException concurrentCreation) {
+            // A concurrent request created the cart first (uk_cart_user); re-read it.
+            return cartRepository.findByUserId(userId)
+                    .orElseThrow(() -> new EcommerceException(ECOMErrorType.GENERAL_ERROR));
+        }
     }
 
     private Cart getCartOrThrow(Long userId) {

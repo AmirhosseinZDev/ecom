@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -33,14 +34,27 @@ abstract class BaseCartServiceUTest {
     protected CartRepository cartRepository;
     @Mock
     protected ProductRepository productRepository;
+    @Mock
+    protected CartFactory cartFactory;
 
     protected CartService cartService;
 
     @BeforeEach
     void baseSetUp() {
-        cartService = new CartService(cartRepository, productRepository, new CartMapperImpl());
+        cartService = new CartService(cartRepository, productRepository, new CartMapperImpl(), cartFactory);
         // save returns the persisted instance; harmless if a given test never saves.
         lenient().when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    }
+
+    /**
+     * Stubs the lazy-creation path: no cart exists yet, so the service delegates to
+     * {@link CartFactory#createNew(Long)}.
+     */
+    protected Cart stubLazyCreatedCart() {
+        Cart created = cart(1L, USER_ID);
+        when(cartRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
+        when(cartFactory.createNew(USER_ID)).thenReturn(created);
+        return created;
     }
 
     protected void stubProductsForDto(Product... products) {
