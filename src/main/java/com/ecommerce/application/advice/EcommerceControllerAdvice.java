@@ -36,7 +36,7 @@ public class EcommerceControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionParam handleAccessDeniedException(AccessDeniedException exception) {
         return exceptionHandlerUtil.generateExceptionParam(exception);
     }

@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @ActiveProfiles("test")
-abstract class AbstractIntegrationITest {
+public abstract class AbstractIntegrationITest {
 
     protected static final String DEFAULT_PASSWORD = "Str0ngPass!";
     protected static final String DEFAULT_FIRST_NAME = "Test";
