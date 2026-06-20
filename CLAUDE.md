@@ -1,6 +1,6 @@
 # Ecommerce Application
 
-End-user e-commerce REST API — OTP-based authentication (SMS ticket system) plus password, and a product catalog with image management.
+End-user e-commerce REST API — OTP-based authentication (SMS ticket system) plus password, a product catalog with image management, and a per-user shopping cart.
 
 | Reference              | Link                                                         |
 |------------------------|--------------------------------------------------------------|
@@ -15,10 +15,13 @@ End-user e-commerce REST API — OTP-based authentication (SMS ticket system) pl
 src/main/java/com/ecommerce/
 ├── application/
 │   ├── api/dto/
+│   │   ├── cart/               # Cart request/response DTOs
 │   │   ├── product/            # DTOs + product DTO enums (enumeration/)
 │   │   └── user/               # DTOs + user DTO enums (enumeration/)
+│   ├── controller/cart/        # CartController
 │   ├── controller/product/     # ProductController
 │   ├── controller/user/        # UserController
+│   ├── service/cart/           # CartService, CartMapper
 │   ├── service/product/        # ProductService, ProductMapper, ProductSpecifications
 │   ├── service/ticket/         # AbstractTicketService, SignupTicketService, LoginTicketService
 │   ├── config/                 # Spring config, security, properties
