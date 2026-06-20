@@ -76,6 +76,27 @@ To add a new OTP flow: add two `CacheName` values, extend `AbstractTicketCacheSe
 
 ---
 
+## Shopping Cart — Non-Obvious Rules
+
+```
+GET    /cart                            ← current user's cart (created on first access)
+POST   /cart/items                      ← productId + variantType + quantity
+PATCH  /cart/items/{itemId}             ← quantity  (absolute set)
+POST   /cart/items/{itemId}/increment   ← +1
+POST   /cart/items/{itemId}/decrement   ← -1  (line removed when it would hit 0)
+DELETE /cart/items/{itemId}             ← remove one line
+DELETE /cart                            ← clear all lines
+```
+
+- All cart endpoints require a JWT (any role); they are **not** in `PUBLIC_ENDPOINTS`. The acting user is taken from the JWT principal (`UserDetailsDto.getId()`), never from the request body — a user can only touch their own cart.
+- **There is no `cart` table.** A user's cart is simply the set of `cart_item` rows owned by that user (`cart_item.user_id`). `GET /cart` returns those rows (an empty cart when there are none — nothing is created); item mutations (`PATCH`/increment/decrement/`DELETE /cart/items/{id}`) that reference an id the user doesn't own return `CART_ITEM_NOT_FOUND`. `DELETE /cart` is an idempotent no-op when empty. The `CartResponseDto` is assembled from the rows (totals + `createdAt`/`updatedAt` derived from the items); it has **no** cart id.
+- **A line is keyed by `(userId, productId, variantType)`** (`uk_cart_item_user_product_variant`). The same product in a different variant is a separate line. Re-adding the same product+variant **merges** into the existing line (quantities sum).
+- **`variantType` must be one the product actually offers** — it must match a `Price.variantType` on the product, else `PRODUCT_VARIANT_NOT_FOUND`.
+- **Stock is validated against `Product.inventoryCount`** (single product-level count; the catalog has no per-variant inventory). Add / increment / set-quantity that would push a line above `inventoryCount` returns `INSUFFICIENT_STOCK`. Only `ACTIVE` products are purchasable, else `PRODUCT_NOT_AVAILABLE`.
+- **Price is snapshotted at add time** (`cart_item.unit_price` / `discount_price`) so the cart total is stable even if the catalog price later changes. `effectivePrice` / `lineTotal` / `totalPrice` in the response are derived; `discountPrice` wins over `unitPrice` when present.
+
+---
+
 ## Error Response Contract
 
 ```json
