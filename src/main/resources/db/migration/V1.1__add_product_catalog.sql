@@ -1,5 +1,5 @@
 -- =============================================================================
--- V2 : Product catalog
+-- V1.1 : Product catalog
 -- Media, Category, Brand, Product and their child collection tables.
 -- =============================================================================
 

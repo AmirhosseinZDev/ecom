@@ -1,6 +1,6 @@
 package com.ecommerce.application.integration.product;
 
-import com.ecommerce.application.api.dto.product.ProductRequestDto;
+import com.ecommerce.application.api.dto.product.CreateProductRequestDto;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductSearchITest extends AbstractProductITest {
 
     @Test
-    void search_with_no_filters_returns_all_products() throws Exception {
+    void search_with_no_filters_returns_all_active_products() throws Exception {
         createProductAndGetId("phone-a");
         createProductAndGetId("phone-b");
 
@@ -22,11 +22,11 @@ class ProductSearchITest extends AbstractProductITest {
 
     @Test
     void search_filters_by_local_name() throws Exception {
-        ProductRequestDto keyboard = validRequest("keyboard-1");
+        CreateProductRequestDto keyboard = validRequest("keyboard-1");
         keyboard.setLocalName("کیبورد");
         multipartCreate(keyboard, adminToken);
 
-        ProductRequestDto monitor = validRequest("monitor-1");
+        CreateProductRequestDto monitor = validRequest("monitor-1");
         monitor.setLocalName("مانیتور");
         multipartCreate(monitor, adminToken);
 
@@ -43,7 +43,7 @@ class ProductSearchITest extends AbstractProductITest {
 
         createProductAndGetId("tech-item");
 
-        ProductRequestDto fashionReq = validRequest("fashion-item");
+        CreateProductRequestDto fashionReq = validRequest("fashion-item");
         fashionReq.setCategoryId(otherCategoryId);
         multipartCreate(fashionReq, adminToken);
 
@@ -55,11 +55,11 @@ class ProductSearchITest extends AbstractProductITest {
 
     @Test
     void search_is_available_true_returns_only_products_with_positive_inventory() throws Exception {
-        ProductRequestDto inStock = validRequest("in-stock-product");
+        CreateProductRequestDto inStock = validRequest("in-stock-product");
         inStock.setInventoryCount(5);
         multipartCreate(inStock, adminToken);
 
-        ProductRequestDto outOfStock = validRequest("out-of-stock-product");
+        CreateProductRequestDto outOfStock = validRequest("out-of-stock-product");
         outOfStock.setInventoryCount(0);
         multipartCreate(outOfStock, adminToken);
 
@@ -71,11 +71,11 @@ class ProductSearchITest extends AbstractProductITest {
 
     @Test
     void search_is_available_false_returns_only_zero_inventory_products() throws Exception {
-        ProductRequestDto inStock = validRequest("still-available");
+        CreateProductRequestDto inStock = validRequest("still-available");
         inStock.setInventoryCount(3);
         multipartCreate(inStock, adminToken);
 
-        ProductRequestDto outOfStock = validRequest("empty-shelf");
+        CreateProductRequestDto outOfStock = validRequest("empty-shelf");
         outOfStock.setInventoryCount(0);
         multipartCreate(outOfStock, adminToken);
 
@@ -86,14 +86,29 @@ class ProductSearchITest extends AbstractProductITest {
     }
 
     @Test
-    void search_filters_by_status() throws Exception {
+    void search_admin_can_filter_by_status() throws Exception {
         createProductAndGetId("active-item");
 
-        ProductRequestDto inactive = validRequest("inactive-item");
+        CreateProductRequestDto inactive = validRequest("inactive-item");
         inactive.setStatus(ProductStatus.INACTIVE);
         multipartCreate(inactive, adminToken);
 
-        mockMvc.perform(get("/products").param("status", "ACTIVE"))
+        mockMvc.perform(get("/products").param("status", "INACTIVE")
+                        .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].url").value("inactive-item"));
+    }
+
+    @Test
+    void search_unauthenticated_only_returns_active_products() throws Exception {
+        createProductAndGetId("active-item");
+
+        CreateProductRequestDto inactive = validRequest("inactive-item");
+        inactive.setStatus(ProductStatus.INACTIVE);
+        multipartCreate(inactive, adminToken);
+
+        mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.content[0].url").value("active-item"));

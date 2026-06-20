@@ -23,6 +23,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -72,6 +73,7 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "product_price", joinColumns = @JoinColumn(name = "product_id"))
+    @BatchSize(size = 25)
     private List<Price> prices = new ArrayList<>();
 
     @Column(name = "short_description", length = 1024)
@@ -92,6 +94,7 @@ public class Product {
     private ProductImage mainImage;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 25)
     private List<ProductOtherImage> otherImages = new ArrayList<>();
 
     @Column(name = "brand_id")

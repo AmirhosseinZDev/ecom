@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductSearchRequestDto {
+public class SearchProductRequestDto {
 
     private String localName;
 

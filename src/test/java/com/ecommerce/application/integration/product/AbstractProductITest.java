@@ -1,7 +1,7 @@
 package com.ecommerce.application.integration.product;
 
+import com.ecommerce.application.api.dto.product.CreateProductRequestDto;
 import com.ecommerce.application.api.dto.product.PriceDto;
-import com.ecommerce.application.api.dto.product.ProductRequestDto;
 import com.ecommerce.application.integration.AbstractIntegrationITest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ecommerce.persistence.entity.enumeration.InventoryStatus;
@@ -60,12 +60,12 @@ public abstract class AbstractProductITest extends AbstractIntegrationITest {
                 "INSERT INTO brand (name) VALUES ('TestBrand') RETURNING id", Long.class);
     }
 
-    ProductRequestDto validRequest(String url) {
+    CreateProductRequestDto validRequest(String url) {
         PriceDto price = new PriceDto();
         price.setPrice(BigDecimal.valueOf(100));
         price.setVariantType(VariantType.COLOR);
 
-        ProductRequestDto req = new ProductRequestDto();
+        CreateProductRequestDto req = new CreateProductRequestDto();
         req.setCategoryId(categoryId);
         req.setUrl(url);
         req.setName("Test Product");
@@ -88,7 +88,7 @@ public abstract class AbstractProductITest extends AbstractIntegrationITest {
         return part;
     }
 
-    ResultActions multipartCreate(ProductRequestDto req, String token) throws Exception {
+    ResultActions multipartCreate(CreateProductRequestDto req, String token) throws Exception {
         return mockMvc.perform(multipart("/products")
                 .part(jsonPart("data", req))
                 .header("Authorization", "Bearer " + token));

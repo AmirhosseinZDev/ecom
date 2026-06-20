@@ -1,5 +1,5 @@
 -- =============================================================================
--- V5 : Replace media-reference image columns with base64 storage
+-- V1.4 : Replace media-reference image columns with base64 storage
 -- =============================================================================
 
 ALTER TABLE PRODUCT

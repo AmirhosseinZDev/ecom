@@ -2,25 +2,29 @@ package com.ecommerce.application.api.dto.product;
 
 import com.ecommerce.persistence.entity.enumeration.InventoryStatus;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
-import com.ecommerce.persistence.entity.enumeration.SpecificationKey;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
-public class ProductResponseDto {
+public class SearchProductResponseDto {
 
     private Long id;
 
     private String code;
 
+    private String name;
+
+    private String localName;
+
     private Long categoryId;
 
     private Long subCategoryId;
+
+    private Long brandId;
 
     private String url;
 
@@ -28,19 +32,7 @@ public class ProductResponseDto {
 
     private String shortDescription;
 
-    private String fullDescription;
-
-    private Map<SpecificationKey, String> specification;
-
     private ProductImageDto mainImage;
-
-    private List<ProductOtherImageDto> otherImages;
-
-    private String name;
-
-    private String localName;
-
-    private Long brandId;
 
     private InventoryStatus inventoryStatus;
 

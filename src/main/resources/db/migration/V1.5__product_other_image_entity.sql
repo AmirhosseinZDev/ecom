@@ -1,5 +1,5 @@
 -- =============================================================================
--- V6 : Promote product_other_image from element-collection to full entity
+-- V1.5 : Promote product_other_image from element-collection to full entity
 -- =============================================================================
 
 DROP TABLE IF EXISTS PRODUCT_OTHER_IMAGE;

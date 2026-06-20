@@ -24,11 +24,9 @@ public enum ECOMErrorType {
     TOO_MANY_REQUEST(HttpStatus.TOO_MANY_REQUESTS, "error.too.many.requests"),
     SMS_SEND_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "error.sms.send.failed"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "error.product.not.found"),
-    PRODUCT_CODE_ALREADY_EXISTS(HttpStatus.CONFLICT, "error.product.code.already.exists"),
     PRODUCT_URL_ALREADY_EXISTS(HttpStatus.CONFLICT, "error.product.url.already.exists"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "error.category.not.found"),
     BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "error.brand.not.found"),
-    MEDIA_NOT_FOUND(HttpStatus.NOT_FOUND, "error.media.not.found"),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "error.file.upload.failed");
 
     private final HttpStatus httpStatus;

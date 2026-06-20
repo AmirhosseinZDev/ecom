@@ -30,7 +30,4 @@ public class Category {
 
     @Column(name = "local_name", length = 255)
     private String localName;
-
-    @Column(name = "logo_media_id")
-    private Long logoMediaId;
 }

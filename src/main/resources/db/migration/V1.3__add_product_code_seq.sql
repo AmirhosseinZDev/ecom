@@ -1,5 +1,5 @@
 -- =============================================================================
--- V4 : Product code sequence
+-- V1.3 : Product code sequence
 -- Dedicated sequence for auto-generated product codes ({categoryId}-{seq}).
 -- =============================================================================
 

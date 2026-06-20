@@ -31,9 +31,6 @@ public class Brand {
     @Column(name = "manufacturer", length = 255)
     private String manufacturer;
 
-    @Column(name = "logo_media_id")
-    private Long logoMediaId;
-
     @Column(name = "country", length = 255)
     private String country;
 }

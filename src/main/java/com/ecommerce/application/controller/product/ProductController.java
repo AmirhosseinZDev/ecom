@@ -1,8 +1,6 @@
 package com.ecommerce.application.controller.product;
 
-import com.ecommerce.application.api.dto.product.ProductRequestDto;
-import com.ecommerce.application.api.dto.product.ProductResponseDto;
-import com.ecommerce.application.api.dto.product.ProductSearchRequestDto;
+import com.ecommerce.application.api.dto.product.*;
 import com.ecommerce.application.service.product.ProductService;
 import com.ecommerce.application.api.dto.product.enumeration.ImageType;
 import lombok.RequiredArgsConstructor;
@@ -36,33 +34,33 @@ public class ProductController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponseDto create(
-            @RequestPart("data") ProductRequestDto requestDto,
+    public GetProductResponseDto create(
+            @RequestPart("data") CreateProductRequestDto requestDto,
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestParam(value = "altText", required = false) String altText) {
         return productService.create(requestDto, image, altText);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ProductResponseDto getById(@PathVariable Long id) {
+    public GetProductResponseDto getById(@PathVariable Long id) {
         return productService.getById(id);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Page<ProductResponseDto> search(@ModelAttribute ProductSearchRequestDto searchDto, Pageable pageable) {
+    public Page<SearchProductResponseDto> search(@ModelAttribute SearchProductRequestDto searchDto, Pageable pageable) {
         return productService.search(searchDto, pageable);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponseDto update(@PathVariable Long id, @RequestBody ProductRequestDto requestDto) {
+    public GetProductResponseDto update(@PathVariable Long id, @RequestBody CreateProductRequestDto requestDto) {
         return productService.update(id, requestDto);
     }
 
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponseDto uploadImage(
+    public GetProductResponseDto uploadImage(
             @PathVariable Long id,
             @RequestParam ImageType type,
             @RequestPart("image") MultipartFile image,

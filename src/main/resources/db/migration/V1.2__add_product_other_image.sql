@@ -1,5 +1,5 @@
 -- =============================================================================
--- V3 : Add other image columns to product
+-- V1.2 : Add other image columns to product
 -- Splits the single image embedded field into mainImage + otherImages.
 -- =============================================================================
 

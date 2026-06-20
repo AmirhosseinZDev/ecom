@@ -1,7 +1,8 @@
 package com.ecommerce.application.service.product;
 
-import com.ecommerce.application.api.dto.product.ProductSearchRequestDto;
+import com.ecommerce.application.api.dto.product.SearchProductRequestDto;
 import com.ecommerce.persistence.entity.Product;
+import com.ecommerce.persistence.entity.enumeration.ProductStatus;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -13,7 +14,7 @@ final class ProductSpecifications {
     private ProductSpecifications() {
     }
 
-    static Specification<Product> build(ProductSearchRequestDto dto) {
+    static Specification<Product> build(SearchProductRequestDto dto, boolean adminView) {
         var localName = dto.getLocalName();
         var categoryId = dto.getCategoryId();
         var subCategoryId = dto.getSubCategoryId();
@@ -33,8 +34,12 @@ final class ProductSpecifications {
             if (brandId != null) {
                 predicates.add(cb.equal(root.get("brandId"), brandId));
             }
-            if (dto.getStatus() != null) {
-                predicates.add(cb.equal(root.get("status"), dto.getStatus()));
+            if (adminView) {
+                if (dto.getStatus() != null) {
+                    predicates.add(cb.equal(root.get("status"), dto.getStatus()));
+                }
+            } else {
+                predicates.add(cb.equal(root.get("status"), ProductStatus.ACTIVE));
             }
             if (dto.getIsAvailable() != null) {
                 if (dto.getIsAvailable()) {

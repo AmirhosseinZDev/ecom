@@ -1,14 +1,16 @@
 package com.ecommerce.application.service.product;
 
-import com.ecommerce.application.api.dto.product.ProductRequestDto;
-import com.ecommerce.application.api.dto.product.ProductResponseDto;
-import com.ecommerce.application.api.dto.product.ProductSearchRequestDto;
+import com.ecommerce.application.api.dto.product.CreateProductRequestDto;
+import com.ecommerce.application.api.dto.product.GetProductResponseDto;
+import com.ecommerce.application.api.dto.product.SearchProductRequestDto;
+import com.ecommerce.application.api.dto.product.SearchProductResponseDto;
+import com.ecommerce.application.api.dto.product.enumeration.ImageType;
 import com.ecommerce.application.api.exception.ECOMErrorType;
 import com.ecommerce.application.api.exception.EcommerceException;
-import com.ecommerce.application.api.dto.product.enumeration.ImageType;
 import com.ecommerce.persistence.entity.Product;
 import com.ecommerce.persistence.entity.ProductImage;
 import com.ecommerce.persistence.entity.ProductOtherImage;
+import com.ecommerce.persistence.entity.enumeration.ProductStatus;
 import com.ecommerce.persistence.repository.BrandRepository;
 import com.ecommerce.persistence.repository.CategoryRepository;
 import com.ecommerce.persistence.repository.ProductRepository;
@@ -23,12 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Base64;
 
+import static com.ecommerce.application.util.SecurityUtil.isAdmin;
+
 /**
  * @author reza gholamzad
  * @since 6/16/26
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -38,7 +41,8 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductResponseDto create(ProductRequestDto requestDto, MultipartFile mainImageFile, String altText) {
+    @Transactional
+    public GetProductResponseDto create(CreateProductRequestDto requestDto, MultipartFile mainImageFile, String altText) {
 
         validateUrlForCreate(requestDto.getUrl());
 
@@ -58,16 +62,23 @@ public class ProductService {
         return productMapper.toResponseDto(productRepository.save(product));
     }
 
-    public ProductResponseDto getById(Long id) {
-        return productMapper.toResponseDto(findProductOrThrow(id));
+    @Transactional(readOnly = true)
+    public GetProductResponseDto getById(Long id) {
+        Product product = findProductOrThrow(id);
+        if (!isAdmin() && product.getStatus() != ProductStatus.ACTIVE) {
+            throw new EcommerceException(ECOMErrorType.PRODUCT_NOT_FOUND);
+        }
+        return productMapper.toResponseDto(product);
     }
 
-    public Page<ProductResponseDto> search(ProductSearchRequestDto searchDto, Pageable pageable) {
-        return productRepository.findAll(ProductSpecifications.build(searchDto), pageable)
-                .map(productMapper::toResponseDto);
+    @Transactional(readOnly = true)
+    public Page<SearchProductResponseDto> search(SearchProductRequestDto searchDto, Pageable pageable) {
+        return productRepository.findAll(ProductSpecifications.build(searchDto, isAdmin()), pageable)
+                .map(productMapper::toSummaryDto);
     }
 
-    public ProductResponseDto update(Long id, ProductRequestDto requestDto) {
+    @Transactional
+    public GetProductResponseDto update(Long id, CreateProductRequestDto requestDto) {
 
         var product = findProductOrThrow(id);
 
@@ -80,7 +91,8 @@ public class ProductService {
         return productMapper.toResponseDto(productRepository.save(product));
     }
 
-    public ProductResponseDto uploadImage(Long productId, ImageType type, MultipartFile file, String altText) {
+    @Transactional
+    public GetProductResponseDto uploadImage(Long productId, ImageType type, MultipartFile file, String altText) {
 
         var product = findProductOrThrow(productId);
 
@@ -100,7 +112,11 @@ public class ProductService {
         return productMapper.toResponseDto(productRepository.save(product));
     }
 
+    @Transactional
     public void removeImage(Long productId, ImageType type, Long imageId) {
+        if (type == ImageType.OTHER && imageId == null) {
+            throw new EcommerceException(ECOMErrorType.VALIDATION_ERROR);
+        }
         var product = findProductOrThrow(productId);
         if (type == ImageType.MAIN) {
             product.setMainImage(null);
@@ -110,6 +126,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @Transactional
     public void delete(Long id) {
         productRepository.delete(findProductOrThrow(id));
     }
@@ -144,7 +161,7 @@ public class ProductService {
                 .orElseThrow(() -> new EcommerceException(ECOMErrorType.PRODUCT_NOT_FOUND));
     }
 
-    private void validateProductRequestDto(ProductRequestDto requestDto) {
+    private void validateProductRequestDto(CreateProductRequestDto requestDto) {
         if (!categoryRepository.existsById(requestDto.getCategoryId())) {
             throw new EcommerceException(ECOMErrorType.CATEGORY_NOT_FOUND);
         }

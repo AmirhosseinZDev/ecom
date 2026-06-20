@@ -1,6 +1,6 @@
 package com.ecommerce.application.integration.product;
 
-import com.ecommerce.application.api.dto.product.ProductRequestDto;
+import com.ecommerce.application.api.dto.product.CreateProductRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -44,7 +44,7 @@ class ProductCreateITest extends AbstractProductITest {
     @Test
     void create_product_missing_required_fields_returns_400() throws Exception {
         mockMvc.perform(multipart("/products")
-                        .part(jsonPart("data", new ProductRequestDto()))
+                        .part(jsonPart("data", new CreateProductRequestDto()))
                         .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"));
@@ -52,7 +52,7 @@ class ProductCreateITest extends AbstractProductITest {
 
     @Test
     void create_product_with_unknown_category_returns_404() throws Exception {
-        ProductRequestDto req = validRequest("ghost-product");
+        CreateProductRequestDto req = validRequest("ghost-product");
         req.setCategoryId(99999L);
 
         mockMvc.perform(multipart("/products")
