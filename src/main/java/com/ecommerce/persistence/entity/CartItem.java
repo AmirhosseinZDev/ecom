@@ -5,12 +5,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -26,8 +23,8 @@ import java.util.Date;
 @Table(
         name = "cart_item",
         uniqueConstraints = @UniqueConstraint(
-                name = "uk_cart_item_product_variant",
-                columnNames = {"cart_id", "product_id", "variant_type"})
+                name = "uk_cart_item_user_product_variant",
+                columnNames = {"user_id", "product_id", "variant_type"})
 )
 @Getter
 @Setter
@@ -39,9 +36,8 @@ public class CartItem {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id", nullable = false)
-    private Cart cart;
+    @Column(name = "user_id", nullable = false, updatable = false)
+    private Long userId;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;

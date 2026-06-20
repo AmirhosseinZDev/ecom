@@ -2,7 +2,6 @@ package com.ecommerce.application.service.cart;
 
 import com.ecommerce.application.api.dto.cart.CartItemResponseDto;
 import com.ecommerce.application.api.dto.cart.CartResponseDto;
-import com.ecommerce.persistence.entity.Cart;
 import com.ecommerce.persistence.entity.CartItem;
 import com.ecommerce.persistence.entity.Product;
 import org.mapstruct.AfterMapping;
@@ -12,14 +11,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Mapper(componentModel = "spring")
 interface CartMapper {
-
-    @Mapping(target = "totalQuantity", ignore = true)
-    @Mapping(target = "totalPrice", ignore = true)
-    CartResponseDto toResponseDto(Cart cart, @Context Map<Long, Product> products);
 
     @Mapping(target = "productName", ignore = true)
     @Mapping(target = "productCode", ignore = true)
@@ -40,18 +39,28 @@ interface CartMapper {
         dto.setLineTotal(effectivePrice.multiply(BigDecimal.valueOf(item.getQuantity())));
     }
 
-    @AfterMapping
-    default void enrichCart(@MappingTarget CartResponseDto dto) {
-        if (dto.getItems() == null) {
-            dto.setTotalQuantity(0);
-            dto.setTotalPrice(BigDecimal.ZERO);
-            return;
-        }
-        dto.setTotalQuantity(dto.getItems().stream()
-                .mapToInt(CartItemResponseDto::getQuantity)
-                .sum());
-        dto.setTotalPrice(dto.getItems().stream()
+    default CartResponseDto toResponseDto(Long userId, List<CartItem> items, Map<Long, Product> products) {
+        List<CartItemResponseDto> itemDtos = items.stream()
+                .map(item -> toItemDto(item, products))
+                .toList();
+
+        CartResponseDto dto = new CartResponseDto();
+        dto.setUserId(userId);
+        dto.setItems(itemDtos);
+        dto.setTotalQuantity(itemDtos.stream().mapToInt(CartItemResponseDto::getQuantity).sum());
+        dto.setTotalPrice(itemDtos.stream()
                 .map(CartItemResponseDto::getLineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
+        dto.setCreatedAt(items.stream()
+                .map(CartItem::getCreatedAt)
+                .filter(Objects::nonNull)
+                .min(Comparator.naturalOrder())
+                .orElse(null));
+        dto.setUpdatedAt(items.stream()
+                .map(CartItem::getUpdatedAt)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null));
+        return dto;
     }
 }

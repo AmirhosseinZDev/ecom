@@ -4,22 +4,19 @@ import com.ecommerce.application.api.dto.cart.AddCartItemRequestDto;
 import com.ecommerce.application.api.dto.cart.CartResponseDto;
 import com.ecommerce.application.api.exception.ECOMErrorType;
 import com.ecommerce.application.api.exception.EcommerceException;
-import com.ecommerce.persistence.entity.Cart;
 import com.ecommerce.persistence.entity.CartItem;
 import com.ecommerce.persistence.entity.Price;
 import com.ecommerce.persistence.entity.Product;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
 import com.ecommerce.persistence.entity.enumeration.VariantType;
-import com.ecommerce.persistence.repository.CartRepository;
+import com.ecommerce.persistence.repository.CartItemRepository;
 import com.ecommerce.persistence.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,14 +24,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CartService {
 
-    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final CartMapper cartMapper;
-    private final CartFactory cartFactory;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public CartResponseDto getCart(Long userId) {
-        return toDto(getOrCreateCart(userId));
+        return toDto(userId, cartItemRepository.findByUserId(userId));
     }
 
     @Transactional
@@ -43,108 +39,76 @@ public class CartService {
         requirePurchasable(product);
         Price price = findVariantPriceOrThrow(product, requestDto.getVariantType());
 
-        Cart cart = getOrCreateCart(userId);
-        CartItem item = findItem(cart, requestDto.getProductId(), requestDto.getVariantType());
+        CartItem item = cartItemRepository
+                .findByUserIdAndProductIdAndVariantType(userId, requestDto.getProductId(), requestDto.getVariantType())
+                .orElse(null);
 
-        int currentQuantity = item != null ? item.getQuantity() : 0;
-        int newQuantity = currentQuantity + requestDto.getQuantity();
+        int newQuantity = (item != null ? item.getQuantity() : 0) + requestDto.getQuantity();
         requireSufficientStock(product, newQuantity);
 
         if (item == null) {
             item = new CartItem();
-            item.setCart(cart);
+            item.setUserId(userId);
             item.setProductId(product.getId());
             item.setVariantType(requestDto.getVariantType());
             item.setUnitPrice(price.getPrice());
             item.setDiscountPrice(price.getDiscountPrice());
-            item.setQuantity(newQuantity);
-            cart.getItems().add(item);
-        } else {
-            item.setQuantity(newQuantity);
         }
+        item.setQuantity(newQuantity);
+        cartItemRepository.save(item);
 
-        return toDto(cartRepository.save(cart));
+        return getCartDto(userId);
     }
 
     @Transactional
     public CartResponseDto updateItemQuantity(Long userId, Long itemId, int quantity) {
-        Cart cart = getCartOrThrow(userId);
-        CartItem item = findItemOrThrow(cart, itemId);
+        CartItem item = findItemOrThrow(userId, itemId);
         Product product = findProductOrThrow(item.getProductId());
         requireSufficientStock(product, quantity);
         item.setQuantity(quantity);
-        return toDto(cartRepository.save(cart));
+        cartItemRepository.save(item);
+        return getCartDto(userId);
     }
 
     @Transactional
     public CartResponseDto incrementItem(Long userId, Long itemId) {
-        Cart cart = getCartOrThrow(userId);
-        CartItem item = findItemOrThrow(cart, itemId);
+        CartItem item = findItemOrThrow(userId, itemId);
         Product product = findProductOrThrow(item.getProductId());
         int newQuantity = item.getQuantity() + 1;
         requireSufficientStock(product, newQuantity);
         item.setQuantity(newQuantity);
-        return toDto(cartRepository.save(cart));
+        cartItemRepository.save(item);
+        return getCartDto(userId);
     }
 
     @Transactional
     public CartResponseDto decrementItem(Long userId, Long itemId) {
-        Cart cart = getCartOrThrow(userId);
-        CartItem item = findItemOrThrow(cart, itemId);
+        CartItem item = findItemOrThrow(userId, itemId);
         if (item.getQuantity() <= 1) {
-            cart.getItems().remove(item);
+            cartItemRepository.delete(item);
         } else {
             item.setQuantity(item.getQuantity() - 1);
+            cartItemRepository.save(item);
         }
-        return toDto(cartRepository.save(cart));
+        return getCartDto(userId);
     }
 
     @Transactional
     public CartResponseDto removeItem(Long userId, Long itemId) {
-        Cart cart = getCartOrThrow(userId);
-        CartItem item = findItemOrThrow(cart, itemId);
-        cart.getItems().remove(item);
-        return toDto(cartRepository.save(cart));
+        CartItem item = findItemOrThrow(userId, itemId);
+        cartItemRepository.delete(item);
+        return getCartDto(userId);
     }
 
     @Transactional
     public CartResponseDto clearCart(Long userId) {
-        // Clearing is idempotent: a missing cart is treated as already-empty rather than 404.
-        Cart cart = getOrCreateCart(userId);
-        cart.getItems().clear();
-        return toDto(cartRepository.save(cart));
+        // Clearing is idempotent: with no rows for the user this simply deletes nothing.
+        cartItemRepository.deleteByUserId(userId);
+        return toDto(userId, List.of());
     }
 
-    private Cart getOrCreateCart(Long userId) {
-        Optional<Cart> existing = cartRepository.findByUserId(userId);
-        if (existing.isPresent()) {
-            return existing.get();
-        }
-        try {
-            return cartFactory.createNew(userId);
-        } catch (DataIntegrityViolationException concurrentCreation) {
-            // A concurrent request created the cart first (uk_cart_user); re-read it.
-            return cartRepository.findByUserId(userId)
-                    .orElseThrow(() -> new EcommerceException(ECOMErrorType.GENERAL_ERROR));
-        }
-    }
-
-    private Cart getCartOrThrow(Long userId) {
-        return cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new EcommerceException(ECOMErrorType.CART_ITEM_NOT_FOUND));
-    }
-
-    private CartItem findItem(Cart cart, Long productId, VariantType variantType) {
-        return cart.getItems().stream()
-                .filter(i -> i.getProductId().equals(productId) && i.getVariantType() == variantType)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private CartItem findItemOrThrow(Cart cart, Long itemId) {
-        return cart.getItems().stream()
-                .filter(i -> i.getId().equals(itemId))
-                .findFirst()
+    private CartItem findItemOrThrow(Long userId, Long itemId) {
+        return cartItemRepository.findByIdAndUserId(itemId, userId)
                 .orElseThrow(() -> new EcommerceException(ECOMErrorType.CART_ITEM_NOT_FOUND));
     }
 
@@ -172,8 +136,12 @@ public class CartService {
         }
     }
 
-    private CartResponseDto toDto(Cart cart) {
-        List<Long> productIds = cart.getItems().stream()
+    private CartResponseDto getCartDto(Long userId) {
+        return toDto(userId, cartItemRepository.findByUserId(userId));
+    }
+
+    private CartResponseDto toDto(Long userId, List<CartItem> items) {
+        List<Long> productIds = items.stream()
                 .map(CartItem::getProductId)
                 .distinct()
                 .toList();
@@ -181,6 +149,6 @@ public class CartService {
                 ? Map.of()
                 : productRepository.findAllById(productIds).stream()
                         .collect(Collectors.toMap(Product::getId, Function.identity()));
-        return cartMapper.toResponseDto(cart, products);
+        return cartMapper.toResponseDto(userId, items, products);
     }
 }

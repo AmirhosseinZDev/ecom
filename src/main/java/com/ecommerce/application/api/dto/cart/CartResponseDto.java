@@ -11,8 +11,6 @@ import java.util.List;
 @Setter
 public class CartResponseDto {
 
-    private Long id;
-
     private Long userId;
 
     private List<CartItemResponseDto> items;
