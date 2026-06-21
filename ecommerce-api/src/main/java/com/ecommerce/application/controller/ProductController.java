@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 6/16/26
  */
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 

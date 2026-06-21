@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 12/26/25
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
