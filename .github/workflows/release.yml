@@ -54,7 +54,7 @@ jobs:
       # Tag the image with the release version (without the leading "v") and latest.
       - name: Derive image tags
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.IMAGE }}
           tags: |
