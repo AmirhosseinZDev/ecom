@@ -70,7 +70,7 @@ jobs:
       # Validates the multi-stage Dockerfile (Temurin 25 build + JRE 25 runtime).
       # Build only — publishing happens in the Release workflow on a version tag.
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false
