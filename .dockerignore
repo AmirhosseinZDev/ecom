@@ -22,4 +22,9 @@ docs/
 *.md
 
 # Local config overrides that must not leak into the image
-src/main/resources/config/application-dev.yml
+ecommerce-api/src/main/resources/config/application-dev.yml
+
+# Frontend dependencies and build output
+ecommerce-web/node/
+ecommerce-web/node_modules/
+ecommerce-web/dist/

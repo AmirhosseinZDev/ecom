@@ -38,7 +38,7 @@ jobs:
       - name: Create GitHub Release with jar
         uses: softprops/action-gh-release@v3
         with:
-          files: target/*.jar
+          files: ecommerce-api/target/*.jar
           generate_release_notes: true
 
       - name: Set up Docker Buildx

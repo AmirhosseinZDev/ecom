@@ -13,9 +13,9 @@ ENV TZ=Asia/Tehran
 
 WORKDIR /usr/local/app/
 
-COPY --from=build-env /app/target/*.jar /usr/local/app/
+COPY --from=build-env /app/ecommerce-api/target/*.jar /usr/local/app/
 
-RUN mv /usr/local/app/ecommerce-*.jar /usr/local/app/ecom.jar
+RUN mv /usr/local/app/ecommerce-api-*.jar /usr/local/app/ecom.jar
 
 EXPOSE 8080
 
