@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ecommerce-jar
-          path: ecommerce-api/target/*.jar
+          path: ecommerce-backend/target/*.jar
           if-no-files-found: error
           retention-days: 14
 
@@ -50,8 +50,8 @@ jobs:
         with:
           name: test-reports
           path: |
-            ecommerce-api/target/surefire-reports/
-            ecommerce-api/target/failsafe-reports/
+            ecommerce-backend/target/surefire-reports/
+            ecommerce-backend/target/failsafe-reports/
           if-no-files-found: ignore
           retention-days: 7
 

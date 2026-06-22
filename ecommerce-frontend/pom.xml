@@ -9,9 +9,9 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ecommerce-web</artifactId>
+    <artifactId>ecommerce-frontend</artifactId>
     <packaging>pom</packaging>
-    <name>ecommerce-web</name>
+    <name>ecommerce-frontend</name>
 
     <build>
         <plugins>

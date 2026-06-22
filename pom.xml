@@ -17,8 +17,8 @@
     <name>ecommerce</name>
 
     <modules>
-        <module>ecommerce-web</module>
-        <module>ecommerce-api</module>
+        <module>ecommerce-frontend</module>
+        <module>ecommerce-backend</module>
     </modules>
 
     <properties>

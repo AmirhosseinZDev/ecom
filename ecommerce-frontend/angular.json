@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "ecommerce-web": {
+    "ecommerce-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -84,10 +84,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ecommerce-web:build:production"
+              "buildTarget": "ecommerce-frontend:build:production"
             },
             "development": {
-              "buildTarget": "ecommerce-web:build:development"
+              "buildTarget": "ecommerce-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

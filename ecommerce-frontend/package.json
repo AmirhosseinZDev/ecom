@@ -1,5 +1,5 @@
 {
-  "name": "ecommerce-web",
+  "name": "ecommerce-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
