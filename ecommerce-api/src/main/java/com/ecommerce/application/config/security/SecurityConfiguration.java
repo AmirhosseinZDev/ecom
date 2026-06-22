@@ -2,6 +2,7 @@ package com.ecommerce.application.config.security;
 
 import com.ecommerce.application.filter.JwtAuthenticationFilter;
 import com.ecommerce.application.service.jwt.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import static com.ecommerce.application.config.security.PublicEndPoint.GET_PUBLIC_ENDPOINTS;
 import static com.ecommerce.application.config.security.PublicEndPoint.POST_PUBLIC_ENDPOINTS;
@@ -46,26 +44,26 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/favicon.ico", "/*.js", "/*.css")
-                        .permitAll()
+
                         .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(this::isSpaRoute).permitAll()
                         .anyRequest().authenticated())
+
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(corsSpec -> corsSpec.configurationSource(exchange -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOrigin("http://localhost:8081");
-                    config.addAllowedMethod("*");
-                    config.addAllowedHeader("*");
-                    return config;
-                }))
+
+                .cors(AbstractHttpConfigurer::disable)
+
                 .formLogin(AbstractHttpConfigurer::disable)
+
                 .logout(AbstractHttpConfigurer::disable)
+
                 .sessionManagement(sessionManagementConfigurer ->
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class);
 
@@ -89,10 +87,6 @@ public class SecurityConfiguration {
         if (!HttpMethod.GET.matches(request.getMethod())) {
             return false;
         }
-        String path = request.getRequestURI();
-        return !path.startsWith("/api")
-                && !path.startsWith("/v3")
-                && !path.startsWith("/swagger-ui")
-                && !path.startsWith("/actuator");
+        return !request.getRequestURI().startsWith("/api");
     }
 }

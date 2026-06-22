@@ -15,9 +15,7 @@ public class PublicEndPoint {
     };
 
     static final String[] GET_PUBLIC_ENDPOINTS = {
-            "/v3/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
+            "/actuator/health",
             API + "/products",
             API + "/products/**"
     };
