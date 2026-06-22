@@ -2,7 +2,6 @@ package com.ecommerce.application.config.security;
 
 import com.ecommerce.application.filter.JwtAuthenticationFilter;
 import com.ecommerce.application.service.jwt.JwtService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +46,8 @@ public class SecurityConfiguration {
 
                         .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(this::isSpaRoute).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/favicon.ico", "/*.js", "/*.css", "/assets/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/{path:[^\\.]*}", "/**/{path:[^\\.]*}").permitAll()
                         .anyRequest().authenticated())
 
                 .csrf(AbstractHttpConfigurer::disable)
@@ -83,10 +83,4 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    private boolean isSpaRoute(HttpServletRequest request) {
-        if (!HttpMethod.GET.matches(request.getMethod())) {
-            return false;
-        }
-        return !request.getRequestURI().startsWith("/api");
-    }
 }
