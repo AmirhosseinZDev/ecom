@@ -37,3 +37,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Node / Angular ###
+node_modules/
+node/
+dist/
