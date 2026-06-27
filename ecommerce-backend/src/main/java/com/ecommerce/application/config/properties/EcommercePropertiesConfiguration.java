@@ -33,4 +33,11 @@ public class EcommercePropertiesConfiguration {
     public SmsProperties smsProperties() {
         return new SmsProperties();
     }
+
+    @Bean
+    @Valid
+    @ConfigurationProperties(prefix = "app.shipping")
+    public ShippingProperties shippingProperties() {
+        return new ShippingProperties();
+    }
 }
