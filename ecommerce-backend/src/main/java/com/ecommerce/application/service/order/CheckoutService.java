@@ -16,6 +16,8 @@ import com.ecommerce.persistence.entity.OrderItem;
 import com.ecommerce.persistence.entity.Price;
 import com.ecommerce.persistence.entity.Product;
 import com.ecommerce.persistence.entity.UserAddress;
+import com.ecommerce.persistence.entity.embeddable.AddressSnapshot;
+import com.ecommerce.persistence.entity.embeddable.ProductSnapshot;
 import com.ecommerce.persistence.entity.enumeration.OrderStatus;
 import com.ecommerce.persistence.entity.enumeration.ProductStatus;
 import com.ecommerce.persistence.entity.enumeration.UserRole;
@@ -113,7 +115,7 @@ public class CheckoutService {
         order.setStatus(OrderStatus.PENDING);
         applyAddressSnapshot(address, order);
 
-        BigDecimal subtotal = BigDecimal.ZERO;
+        BigDecimal itemsCost = BigDecimal.ZERO;
         int totalWeightGram = 0;
         for (OrderLineSpec line : lines) {
             Product product = findProductOrThrow(line.productId());
@@ -126,9 +128,10 @@ public class CheckoutService {
             BigDecimal lineTotal = effectivePrice.multiply(BigDecimal.valueOf(line.quantity()));
 
             OrderItem orderItem = new OrderItem();
-            orderItem.setProductId(product.getId());
-            orderItem.setProductName(product.getName());
-            orderItem.setProductCode(product.getCode());
+            ProductSnapshot productSnapshot = orderItem.getProduct();
+            productSnapshot.setProductId(product.getId());
+            productSnapshot.setProductName(product.getName());
+            productSnapshot.setProductCode(product.getCode());
             orderItem.setVariantType(line.variant());
             orderItem.setQuantity(line.quantity());
             orderItem.setUnitPrice(line.unitPrice());
@@ -136,16 +139,16 @@ public class CheckoutService {
             orderItem.setLineTotal(lineTotal);
             order.addItem(orderItem);
 
-            subtotal = subtotal.add(lineTotal);
+            itemsCost = itemsCost.add(lineTotal);
             totalWeightGram += weightOf(product) * line.quantity();
         }
 
-        ShippingResult shipping = shippingCalculator.calculate(order.getProvince(), totalWeightGram);
-        order.setSubtotal(subtotal);
+        ShippingResult shipping = shippingCalculator.calculate(order.getShippingAddress().getProvince(), totalWeightGram);
+        order.setItemsCost(itemsCost);
         order.setTotalWeightGram(totalWeightGram);
         order.setShippingZone(shipping.zone());
         order.setShippingCost(shipping.cost());
-        order.setTotalAmount(subtotal.add(shipping.cost()));
+        order.setTotalCost(itemsCost.add(shipping.cost()));
 
         return orderRepository.save(order);
     }
@@ -200,16 +203,17 @@ public class CheckoutService {
     }
 
     private void applyAddressSnapshot(UserAddress address, Order order) {
-        order.setRecipientFirstName(address.getRecipientFirstName());
-        order.setRecipientLastName(address.getRecipientLastName());
-        order.setRecipientMobile(address.getRecipientMobile());
-        order.setRecipientNationalId(address.getRecipientNationalId());
-        order.setProvince(address.getProvince());
-        order.setCity(address.getCity());
-        order.setPostalCode(address.getPostalCode());
-        order.setAddressLine(address.getAddressLine());
-        order.setPlaque(address.getPlaque());
-        order.setUnit(address.getUnit());
+        AddressSnapshot snapshot = order.getShippingAddress();
+        snapshot.setRecipientFirstName(address.getRecipientFirstName());
+        snapshot.setRecipientLastName(address.getRecipientLastName());
+        snapshot.setRecipientMobile(address.getRecipientMobile());
+        snapshot.setRecipientNationalId(address.getRecipientNationalId());
+        snapshot.setProvince(address.getProvince());
+        snapshot.setCity(address.getCity());
+        snapshot.setPostalCode(address.getPostalCode());
+        snapshot.setAddressLine(address.getAddressLine());
+        snapshot.setPlaque(address.getPlaque());
+        snapshot.setUnit(address.getUnit());
     }
 
     private Product findProductOrThrow(Long productId) {

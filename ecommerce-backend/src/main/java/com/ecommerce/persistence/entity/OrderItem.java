@@ -1,7 +1,9 @@
 package com.ecommerce.persistence.entity;
 
+import com.ecommerce.persistence.entity.embeddable.ProductSnapshot;
 import com.ecommerce.persistence.entity.enumeration.VariantType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,15 +36,9 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
-
     // Product details snapshotted at checkout time.
-    @Column(name = "product_name", nullable = false, length = 255)
-    private String productName;
-
-    @Column(name = "product_code", nullable = false, length = 100)
-    private String productCode;
+    @Embedded
+    private ProductSnapshot product = new ProductSnapshot();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "variant_type", nullable = false, length = 64)

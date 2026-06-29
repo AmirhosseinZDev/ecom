@@ -47,9 +47,9 @@ class GuestCheckoutITest extends AbstractCheckoutITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("PENDING"))
                 .andExpect(jsonPath("$.items", hasSize(1)))
-                .andExpect(jsonPath("$.subtotal").value(200.0))
+                .andExpect(jsonPath("$.itemsCost").value(200.0))
                 .andExpect(jsonPath("$.shippingZone").value("INTRA_PROVINCE"))
-                .andExpect(jsonPath("$.totalAmount").value(183200.0))
+                .andExpect(jsonPath("$.totalCost").value(183200.0))
                 .andExpect(jsonPath("$.recipientFirstName").value("Sara"));
 
         // a guest AppUser was persisted with isRegistered = false

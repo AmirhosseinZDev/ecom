@@ -27,11 +27,11 @@ class CheckoutITest extends AbstractCheckoutITest {
                 .andExpect(jsonPath("$.items[0].productId").value(productId))
                 .andExpect(jsonPath("$.items[0].quantity").value(2))
                 .andExpect(jsonPath("$.items[0].lineTotal").value(200.0))
-                .andExpect(jsonPath("$.subtotal").value(200.0))
+                .andExpect(jsonPath("$.itemsCost").value(200.0))
                 .andExpect(jsonPath("$.totalWeightGram").value(1000))
                 .andExpect(jsonPath("$.shippingZone").value("INTRA_PROVINCE"))
                 .andExpect(jsonPath("$.shippingCost").value(183000.0))
-                .andExpect(jsonPath("$.totalAmount").value(183200.0))
+                .andExpect(jsonPath("$.totalCost").value(183200.0))
                 .andExpect(jsonPath("$.province").value("TEHRAN"))
                 .andExpect(jsonPath("$.recipientFirstName").value("Ali"))
                 .andReturn();

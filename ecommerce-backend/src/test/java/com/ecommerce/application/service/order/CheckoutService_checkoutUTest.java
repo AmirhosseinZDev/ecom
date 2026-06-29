@@ -48,10 +48,10 @@ class CheckoutService_checkoutUTest extends BaseCheckoutServiceUTest {
 
         assertEquals(OrderStatus.PENDING, response.getStatus());
         assertEquals(1, response.getItems().size());
-        // discount price wins: 80 * 2 = 160 subtotal
-        assertEquals(0, response.getSubtotal().compareTo(BigDecimal.valueOf(160)));
+        // discount price wins: 80 * 2 = 160 items cost
+        assertEquals(0, response.getItemsCost().compareTo(BigDecimal.valueOf(160)));
         assertEquals(0, response.getShippingCost().compareTo(SHIPPING_COST));
-        assertEquals(0, response.getTotalAmount().compareTo(SHIPPING_COST.add(BigDecimal.valueOf(160))));
+        assertEquals(0, response.getTotalCost().compareTo(SHIPPING_COST.add(BigDecimal.valueOf(160))));
         assertEquals(1000, response.getTotalWeightGram());
         assertEquals(ShippingZone.INTRA_PROVINCE, response.getShippingZone());
 

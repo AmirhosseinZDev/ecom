@@ -31,10 +31,10 @@ CREATE TABLE ORDERS
     PLAQUE                VARCHAR(32),
     UNIT                  VARCHAR(32),
 
-    -- Money / shipping.
-    SUBTOTAL              NUMERIC(14, 2) NOT NULL,
+    -- Money / shipping (total_cost = items_cost + shipping_cost).
+    ITEMS_COST            NUMERIC(14, 2) NOT NULL,
     SHIPPING_COST         NUMERIC(14, 2) NOT NULL,
-    TOTAL_AMOUNT          NUMERIC(14, 2) NOT NULL,
+    TOTAL_COST            NUMERIC(14, 2) NOT NULL,
     TOTAL_WEIGHT_GRAM     INTEGER        NOT NULL,
     SHIPPING_ZONE         VARCHAR(32)    NOT NULL,
 

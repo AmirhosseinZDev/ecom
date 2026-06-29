@@ -43,11 +43,11 @@ public class OrderResponseDto {
 
     private List<OrderItemResponseDto> items;
 
-    private BigDecimal subtotal;
+    private BigDecimal itemsCost;
 
     private BigDecimal shippingCost;
 
-    private BigDecimal totalAmount;
+    private BigDecimal totalCost;
 
     private Integer totalWeightGram;
 

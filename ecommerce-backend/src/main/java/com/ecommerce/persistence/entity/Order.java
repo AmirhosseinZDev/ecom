@@ -1,10 +1,11 @@
 package com.ecommerce.persistence.entity;
 
+import com.ecommerce.persistence.entity.embeddable.AddressSnapshot;
 import com.ecommerce.persistence.entity.enumeration.OrderStatus;
-import com.ecommerce.persistence.entity.enumeration.Province;
 import com.ecommerce.persistence.entity.enumeration.ShippingZone;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -45,52 +46,20 @@ public class Order {
     @Column(name = "status", nullable = false, length = 32)
     private OrderStatus status;
 
-    // -----------------------------------------------------------------------------------------
-    // Shipping address snapshot: captured at checkout so the order is unaffected by later edits
-    // or deletion of the source UserAddress.
-    // -----------------------------------------------------------------------------------------
-    @Column(name = "recipient_first_name", nullable = false, length = 255)
-    private String recipientFirstName;
-
-    @Column(name = "recipient_last_name", nullable = false, length = 255)
-    private String recipientLastName;
-
-    @Column(name = "recipient_mobile", nullable = false, length = 20)
-    private String recipientMobile;
-
-    @Column(name = "recipient_national_id", length = 20)
-    private String recipientNationalId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "province", nullable = false, length = 64)
-    private Province province;
-
-    @Column(name = "city", nullable = false, length = 255)
-    private String city;
-
-    @Column(name = "postal_code", nullable = false, length = 20)
-    private String postalCode;
-
-    @Column(name = "address_line", nullable = false, columnDefinition = "TEXT")
-    private String addressLine;
-
-    @Column(name = "plaque", length = 32)
-    private String plaque;
-
-    @Column(name = "unit", length = 32)
-    private String unit;
+    @Embedded
+    private AddressSnapshot shippingAddress = new AddressSnapshot();
 
     // -----------------------------------------------------------------------------------------
-    // Money / shipping
+    // Money / shipping: totalCost = itemsCost + shippingCost
     // -----------------------------------------------------------------------------------------
-    @Column(name = "subtotal", nullable = false, precision = 14, scale = 2)
-    private BigDecimal subtotal;
+    @Column(name = "items_cost", nullable = false, precision = 14, scale = 2)
+    private BigDecimal itemsCost;
 
     @Column(name = "shipping_cost", nullable = false, precision = 14, scale = 2)
     private BigDecimal shippingCost;
 
-    @Column(name = "total_amount", nullable = false, precision = 14, scale = 2)
-    private BigDecimal totalAmount;
+    @Column(name = "total_cost", nullable = false, precision = 14, scale = 2)
+    private BigDecimal totalCost;
 
     @Column(name = "total_weight_gram", nullable = false)
     private Integer totalWeightGram;

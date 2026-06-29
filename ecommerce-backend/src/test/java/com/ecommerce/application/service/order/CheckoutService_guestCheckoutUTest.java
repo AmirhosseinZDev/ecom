@@ -87,7 +87,7 @@ class CheckoutService_guestCheckoutUTest extends BaseCheckoutServiceUTest {
 
         assertEquals(OrderStatus.PENDING, response.getStatus());
         // catalog price 100 * qty 2 = 200
-        assertEquals(0, response.getSubtotal().compareTo(BigDecimal.valueOf(200)));
+        assertEquals(0, response.getItemsCost().compareTo(BigDecimal.valueOf(200)));
         assertEquals(ShippingZone.INTRA_PROVINCE, response.getShippingZone());
 
         ArgumentCaptor<AppUser> userCaptor = ArgumentCaptor.forClass(AppUser.class);
